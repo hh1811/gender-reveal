@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import type { VoteChoice } from "@/lib/types";
 
 export function VoteStep({
@@ -32,6 +33,7 @@ export function VoteStep({
           selected={selectedVote === "nino"}
           glow="rgba(142,205,247,.95)"
           onClick={() => onSelect("nino")}
+          icon={<BowtieIcon />}
         />
         <VoteCard
           label="NIÑA"
@@ -41,6 +43,7 @@ export function VoteStep({
           selected={selectedVote === "nina"}
           glow="rgba(247,168,200,.95)"
           onClick={() => onSelect("nina")}
+          icon={<BowIcon />}
         />
       </div>
       <button
@@ -63,6 +66,7 @@ function VoteCard({
   selected,
   glow,
   onClick,
+  icon,
 }: {
   label: string;
   sub: string;
@@ -71,6 +75,7 @@ function VoteCard({
   selected: boolean;
   glow: string;
   onClick: () => void;
+  icon: ReactNode;
 }) {
   return (
     <div
@@ -82,11 +87,45 @@ function VoteCard({
         transform: selected ? "translateY(-3px)" : "none",
       }}
     >
-      <div className="w-[54px] h-[54px] rounded-full mx-auto mb-3" style={{ background: dotColor }} />
+      <div className="w-[54px] h-[54px] rounded-full mx-auto mb-3 flex items-center justify-center" style={{ background: dotColor }}>
+        {icon}
+      </div>
       <div className="text-[13px] font-extrabold tracking-[1.5px]" style={{ color: labelColor }}>
         {label}
       </div>
       <div className="font-serif text-[23px] font-semibold text-[#3a3349] mt-0.5">{sub}</div>
     </div>
+  );
+}
+
+function BowtieIcon() {
+  return (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M3 7.5c0-.83 1.2-1.4 2.2-.9L11 9.3a1 1 0 0 1 0 1.8l-5.8 2.7c-1 .5-2.2-.07-2.2-.9V7.5Z"
+        fill="white"
+      />
+      <path
+        d="M21 7.5c0-.83-1.2-1.4-2.2-.9L13 9.3a1 1 0 0 0 0 1.8l5.8 2.7c1 .5 2.2-.07 2.2-.9V7.5Z"
+        fill="white"
+      />
+      <circle cx="12" cy="10.2" r="1.7" fill="white" />
+    </svg>
+  );
+}
+
+function BowIcon() {
+  return (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M11 11.2 4.8 7.7C3.6 7 2 7.8 2 9.2v2.6c0 1.4 1.6 2.2 2.8 1.5L11 9.8"
+        fill="white"
+      />
+      <path
+        d="M13 11.2 19.2 7.7C20.4 7 22 7.8 22 9.2v2.6c0 1.4-1.6 2.2-2.8 1.5L13 9.8"
+        fill="white"
+      />
+      <rect x="10.3" y="8.8" width="3.4" height="3.4" rx="1" fill="white" />
+    </svg>
   );
 }
