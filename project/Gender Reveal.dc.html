@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0}
+  @keyframes gr-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+  @keyframes gr-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.8)}}
+  @keyframes gr-pop{0%{transform:scale(.7);opacity:0}60%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+  @keyframes gr-fall{0%{transform:translateY(-40px) rotate(0);opacity:0}10%{opacity:1}100%{transform:translateY(640px) rotate(420deg);opacity:.9}}
+  @keyframes gr-rise{0%{transform:translateY(18px);opacity:0}100%{transform:translateY(0);opacity:1}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#FFF7EF;font-family:'Nunito',system-ui,sans-serif;color:#4A4458">
+
+  <div style="position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;padding:11px 18px;background:rgba(255,247,239,.86);backdrop-filter:blur(10px);border-bottom:1px solid #efe1d4">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:700;color:#6A4FC9;letter-spacing:.3px;margin-right:6px">Baby Reveal</div>
+    <div style="display:flex;gap:6px;background:#f3e9df;padding:4px;border-radius:999px">
+      <sc-if value="{{ isGuest }}" hint-placeholder-val="{{ true }}"><button onClick="{{ showGuest }}" style="border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:13px;padding:7px 16px;border-radius:999px;background:#6A4FC9;color:#fff">Invitado</button></sc-if>
+      <sc-if value="{{ notGuest }}" hint-placeholder-val="{{ false }}"><button onClick="{{ showGuest }}" style="border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:13px;padding:7px 16px;border-radius:999px;background:transparent;color:#9a8fb0">Invitado</button></sc-if>
+      <sc-if value="{{ isDash }}" hint-placeholder-val="{{ true }}"><button onClick="{{ showDashboard }}" style="border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:13px;padding:7px 16px;border-radius:999px;background:#6A4FC9;color:#fff">Dashboard</button></sc-if>
+      <sc-if value="{{ notDash }}" hint-placeholder-val="{{ false }}"><button onClick="{{ showDashboard }}" style="border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:13px;padding:7px 16px;border-radius:999px;background:transparent;color:#9a8fb0">Dashboard</button></sc-if>
+      <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ showAdmin }}" style="border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:13px;padding:7px 16px;border-radius:999px;background:#6A4FC9;color:#fff">Admin</button></sc-if>
+      <sc-if value="{{ notAdmin }}" hint-placeholder-val="{{ true }}"><button onClick="{{ showAdmin }}" style="border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:13px;padding:7px 16px;border-radius:999px;background:transparent;color:#9a8fb0">Admin</button></sc-if>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:#B14B7E">
+      <span style="width:8px;height:8px;border-radius:50%;background:#F7A8C8;animation:gr-pulse 1.4s infinite"></span>EN VIVO · {{ total }} votos
+    </div>
+  </div>
+
+  <!-- ============ GUEST ============ -->
+  <sc-if value="{{ isGuest }}" hint-placeholder-val="{{ true }}">
+  <div style="display:flex;justify-content:center;padding:38px 16px 56px">
+    <div style="width:390px;max-width:100%;background:#1d1726;border-radius:46px;padding:12px;box-shadow:0 30px 70px -28px rgba(106,79,201,.55)">
+      <div style="background:#FFF7EF;border-radius:36px;height:720px;overflow:hidden;position:relative">
+        <div style="position:absolute;top:0;left:0;right:0;height:30px;display:flex;justify-content:center;align-items:flex-end;pointer-events:none"><div style="width:118px;height:7px;border-radius:99px;background:#1d1726;opacity:.18"></div></div>
+        <div style="height:100%;overflow-y:auto;padding:54px 28px 34px;display:flex;flex-direction:column">
+
+          <sc-if value="{{ isRegister }}" hint-placeholder-val="{{ true }}">
+          <div style="margin:auto 0">
+            <div style="display:flex;justify-content:center;margin-bottom:26px"><div style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,#8ECDF7,#F7A8C8);animation:gr-float 4s ease-in-out infinite"></div></div>
+            <div style="font-size:12px;font-weight:800;letter-spacing:2.5px;color:#B9A7F7;text-align:center">GENDER REVEAL</div>
+            <h1 style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:40px;line-height:1.05;margin:10px 0 8px;text-align:center;color:#3a3349">¡Bienvenido!</h1>
+            <p style="text-align:center;font-size:15px;line-height:1.5;color:#8a8398;margin:0 0 26px">Antes de votar, dinos tu nombre para sumarte a la fiesta.</p>
+            <input value="{{ name }}" onInput="{{ onName }}" placeholder="Tu nombre" style="width:100%;border:2px solid #ecdfd2;background:#fff;border-radius:16px;padding:16px 18px;font-size:16px;font-family:inherit;color:#3a3349;outline:none" />
+            <sc-if value="{{ canName }}" hint-placeholder-val="{{ false }}"><button onClick="{{ goVote }}" style="width:100%;margin-top:18px;border:none;border-radius:16px;padding:16px;font-family:inherit;font-size:16px;font-weight:800;color:#fff;cursor:pointer;background:#6A4FC9">Continuar</button></sc-if>
+            <sc-if value="{{ cantName }}" hint-placeholder-val="{{ true }}"><button style="width:100%;margin-top:18px;border:none;border-radius:16px;padding:16px;font-family:inherit;font-size:16px;font-weight:800;color:#fff;cursor:not-allowed;background:#d8cfe8">Continuar</button></sc-if>
+          </div>
+          </sc-if>
+
+          <sc-if value="{{ isVote }}" hint-placeholder-val="{{ true }}">
+          <div style="margin:auto 0">
+            <div style="font-size:12px;font-weight:800;letter-spacing:2px;color:#B9A7F7;text-align:center">HOLA, {{ nameUpper }}</div>
+            <h1 style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:38px;line-height:1.05;margin:8px 0 4px;text-align:center;color:#3a3349">¿Tú qué crees?</h1>
+            <p style="text-align:center;font-size:15px;color:#8a8398;margin:0 0 24px">Toca tu predicción.</p>
+            <div style="display:flex;gap:14px">
+              <div ref="{{ ninoCardRef }}" onClick="{{ selectNino }}" style="flex:1;border-radius:22px;padding:22px 12px;text-align:center;cursor:pointer;background:#fff;border:3px solid #f0e7dd;transition:all .18s">
+                <div style="width:54px;height:54px;border-radius:50%;background:#8ECDF7;margin:0 auto 12px"></div>
+                <div style="font-size:13px;font-weight:800;letter-spacing:1.5px;color:#2C6E8F">NIÑO</div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:600;color:#3a3349;margin-top:2px">It's a boy</div>
+              </div>
+              <div ref="{{ ninaCardRef }}" onClick="{{ selectNina }}" style="flex:1;border-radius:22px;padding:22px 12px;text-align:center;cursor:pointer;background:#fff;border:3px solid #f0e7dd;transition:all .18s">
+                <div style="width:54px;height:54px;border-radius:50%;background:#F7A8C8;margin:0 auto 12px"></div>
+                <div style="font-size:13px;font-weight:800;letter-spacing:1.5px;color:#B14B7E">NIÑA</div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:600;color:#3a3349;margin-top:2px">It's a girl</div>
+              </div>
+            </div>
+            <sc-if value="{{ hasVote }}" hint-placeholder-val="{{ false }}"><button onClick="{{ goPhoto }}" style="width:100%;margin-top:18px;border:none;border-radius:16px;padding:16px;font-family:inherit;font-size:16px;font-weight:800;color:#fff;cursor:pointer;background:#6A4FC9">Continuar</button></sc-if>
+            <sc-if value="{{ noVote }}" hint-placeholder-val="{{ true }}"><button style="width:100%;margin-top:18px;border:none;border-radius:16px;padding:16px;font-family:inherit;font-size:16px;font-weight:800;color:#fff;cursor:not-allowed;background:#d8cfe8">Continuar</button></sc-if>
+          </div>
+          </sc-if>
+
+          <sc-if value="{{ isPhoto }}" hint-placeholder-val="{{ false }}">
+          <div style="margin:auto 0;text-align:center">
+            <div style="font-size:12px;font-weight:800;letter-spacing:2px;color:#B9A7F7">UNA FOTO DEL MOMENTO</div>
+            <h1 style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:38px;line-height:1.05;margin:8px 0 4px;color:#3a3349">¡Sonríe!</h1>
+            <p style="font-size:15px;color:#8a8398;margin:0 0 18px">Tu foto aparecerá junto a tu voto.</p>
+            <div style="position:relative;width:212px;height:212px;border-radius:50%;overflow:hidden;margin:0 auto 8px;background:#efe3d6;border:4px solid #fff;box-shadow:0 14px 34px -18px rgba(106,79,201,.6)">
+              <sc-if value="{{ noPhoto }}" hint-placeholder-val="{{ true }}"><video ref="{{ videoRef }}" autoplay muted playsinline style="width:100%;height:100%;object-fit:cover;transform:scaleX(-1)"></video></sc-if>
+              <sc-if value="{{ hasPhoto }}" hint-placeholder-val="{{ false }}"><div style="width:100%;height:100%;background-image:{{ photoBg }};background-size:cover;background-position:center"></div></sc-if>
+              <sc-if value="{{ cameraError }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;font-size:13px;font-weight:700;color:#a4677f;text-align:center;background:#efe3d6">Activa la cámara o sube una foto</div></sc-if>
+            </div>
+            <div style="height:24px"></div>
+            <sc-if value="{{ noPhoto }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ capturePhoto }}" style="width:100%;border:none;border-radius:16px;padding:16px;font-family:inherit;font-size:16px;font-weight:800;color:#fff;cursor:pointer;background:#6A4FC9">Tomar foto</button>
+              <label style="display:block;width:100%;margin-top:10px;border:2px solid #ecdfd2;border-radius:16px;padding:13px;font-family:inherit;font-size:15px;font-weight:800;color:#8a8398;cursor:pointer">Subir una foto<input type="file" accept="image/*" capture="user" onChange="{{ onFile }}" style="display:none" /></label>
+            </sc-if>
+            <sc-if value="{{ hasPhoto }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ goMessage }}" style="width:100%;border:none;border-radius:16px;padding:16px;font-family:inherit;font-size:16px;font-weight:800;color:#fff;cursor:pointer;background:#6A4FC9">Usar esta foto</button>
+              <button onClick="{{ retakePhoto }}" style="width:100%;margin-top:10px;background:none;border:2px solid #ecdfd2;border-radius:16px;padding:13px;color:#8a8398;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer">Repetir</button>
+            </sc-if>
+            <button onClick="{{ goMessage }}" style="width:100%;background:none;border:none;color:#a99fb6;font-family:inherit;font-size:14px;font-weight:700;padding:14px;cursor:pointer">Omitir foto</button>
+          </div>
+          </sc-if>
+
+          <sc-if value="{{ isMessage }}" hint-placeholder-val="{{ true }}">
+          <div style="margin:auto 0">
+            <div style="font-size:12px;font-weight:800;letter-spacing:2px;color:#B9A7F7;text-align:center">CASI LISTO</div>
+            <h1 style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:34px;line-height:1.08;margin:8px 0 4px;text-align:center;color:#3a3349">Un mensaje para los papás</h1>
+            <p style="text-align:center;font-size:15px;color:#8a8398;margin:0 0 22px">Opcional, pero les encantará leerlo.</p>
+            <textarea value="{{ messageText }}" onInput="{{ onMessage }}" placeholder="Escribe tus buenos deseos…" rows="4" style="width:100%;border:2px solid #ecdfd2;background:#fff;border-radius:16px;padding:15px 17px;font-size:15px;font-family:inherit;line-height:1.5;color:#3a3349;outline:none;resize:none"></textarea>
+            <button onClick="{{ submitVote }}" style="width:100%;margin-top:18px;border:none;border-radius:16px;padding:16px;font-family:inherit;font-size:16px;font-weight:800;color:#fff;cursor:pointer;transition:all .2s;background:#6A4FC9">Enviar mi voto</button>
+            <button onClick="{{ backToVote }}" style="width:100%;background:none;border:none;color:#a99fb6;font-family:inherit;font-size:14px;font-weight:700;padding:14px;cursor:pointer">Cambiar mi voto</button>
+          </div>
+          </sc-if>
+
+          <sc-if value="{{ isDone }}" hint-placeholder-val="{{ true }}">
+          <div style="margin:auto 0;text-align:center">
+            <div style="width:104px;height:104px;border-radius:50%;background-color:{{ voteSoft }};background-image:{{ donePhotoBg }};background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;margin:0 auto 22px;animation:gr-pop .5s ease-out both"><div style="width:50px;height:50px;border-radius:50%;background:{{ voteColor }};opacity:{{ doneDotOpacity }}"></div></div>
+            <h1 style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:40px;line-height:1.05;margin:0 0 6px;color:#3a3349">¡Gracias, {{ name }}!</h1>
+            <p style="font-size:16px;color:#8a8398;margin:0 0 4px">Tu voto quedó registrado:</p>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:{{ voteColor }};margin-bottom:26px">{{ voteLabel }}</div>
+            <div style="background:#fff;border-radius:18px;padding:18px 20px;font-size:14px;line-height:1.5;color:#8a8398;box-shadow:0 8px 24px -16px rgba(106,79,201,.4)">Mira la <b style="color:#6A4FC9">pantalla principal</b> para ver los resultados en vivo.</div>
+            <button onClick="{{ resetGuest }}" style="margin-top:24px;background:none;border:none;color:#a99fb6;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">Votar otra vez (demo)</button>
+          </div>
+          </sc-if>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ============ DASHBOARD ============ -->
+  <sc-if value="{{ isDash }}" hint-placeholder-val="{{ true }}">
+  <div style="padding:26px 26px 40px">
+    <div style="position:relative;width:100%;aspect-ratio:16/9;background:radial-gradient(120% 120% at 50% -10%,#fff 0%,#FFF7EF 55%);border-radius:26px;overflow:hidden;box-shadow:0 26px 70px -34px rgba(106,79,201,.5);border:1px solid #f0e3d6">
+
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;padding:clamp(22px,3.4vw,52px)">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between">
+          <div>
+            <div style="font-size:clamp(11px,1.1vw,16px);font-weight:800;letter-spacing:3px;color:#B9A7F7">{{ parentNames }}</div>
+            <h1 style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:clamp(30px,5.2vw,82px);line-height:.98;margin:4px 0 0;color:#3a3349;white-space:nowrap">¿Niño o Niña?</h1>
+          </div>
+          <div style="text-align:right">
+            <div style="display:inline-flex;align-items:center;gap:8px;font-size:clamp(11px,1vw,15px);font-weight:800;color:#B14B7E"><span style="width:10px;height:10px;border-radius:50%;background:#F7A8C8;animation:gr-pulse 1.4s infinite"></span>EN VIVO</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(30px,3.6vw,58px);font-weight:700;color:#6A4FC9;line-height:1">{{ total }}</div>
+            <div style="font-size:clamp(10px,.9vw,14px);font-weight:700;color:#a99fb6;letter-spacing:1px">VOTOS</div>
+          </div>
+        </div>
+
+        <div style="flex:1;display:flex;align-items:stretch;gap:clamp(12px,1.4vw,22px);margin:clamp(16px,2.2vw,32px) 0;position:relative">
+          <div ref="{{ ninoRef }}" style="width:50%;flex:none;background:linear-gradient(160deg,#aedcfb,#8ECDF7);border-radius:22px;padding:clamp(16px,2vw,30px);display:flex;flex-direction:column;justify-content:space-between;transition:width .8s cubic-bezier(.4,0,.2,1);min-width:0">
+            <div style="font-size:clamp(13px,1.4vw,22px);font-weight:900;letter-spacing:2px;color:#1f5273">NIÑO</div>
+            <div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(44px,8vw,128px);font-weight:700;color:#fff;line-height:.9">{{ ninoPct }}%</div>
+              <div style="font-size:clamp(12px,1.2vw,20px);font-weight:800;color:#2C6E8F">{{ ninoCount }} votos</div>
+            </div>
+          </div>
+          <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:clamp(46px,5vw,80px);height:clamp(46px,5vw,80px);border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:clamp(16px,2vw,30px);color:#B9A7F7;box-shadow:0 10px 28px -10px rgba(106,79,201,.45);z-index:3">vs</div>
+          <div ref="{{ ninaRef }}" style="width:50%;flex:none;background:linear-gradient(160deg,#fbc1da,#F7A8C8);border-radius:22px;padding:clamp(16px,2vw,30px);display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;text-align:right;transition:width .8s cubic-bezier(.4,0,.2,1);min-width:0">
+            <div style="font-size:clamp(13px,1.4vw,22px);font-weight:900;letter-spacing:2px;color:#8d2f5d">NIÑA</div>
+            <div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(44px,8vw,128px);font-weight:700;color:#fff;line-height:.9">{{ ninaPct }}%</div>
+              <div style="font-size:clamp(12px,1.2vw,20px);font-weight:800;color:#B14B7E">{{ ninaCount }} votos</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:clamp(10px,.9vw,14px);font-weight:800;letter-spacing:2px;color:#a99fb6;margin-bottom:8px">ÚLTIMOS VOTOS</div>
+          <div style="display:flex;gap:clamp(8px,1vw,16px)">
+            <sc-for list="{{ recentVoters }}" as="v" hint-placeholder-count="5">
+              <div style="flex:1;background:#fff;border-radius:14px;padding:clamp(9px,1vw,14px);border-top:4px solid {{ v.barColor }};min-width:0;display:flex;align-items:center;gap:clamp(8px,.8vw,12px);animation:gr-rise .4s ease-out both">
+                <div style="width:clamp(30px,3vw,44px);height:clamp(30px,3vw,44px);border-radius:50%;background-color:{{ v.soft }};background-image:{{ v.avatarBg }};background-size:cover;background-position:center;color:{{ v.color }};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:clamp(13px,1.3vw,19px);flex:none">{{ v.initial }}</div>
+                <div style="min-width:0">
+                  <div style="font-size:clamp(12px,1.1vw,17px);font-weight:800;color:#3a3349;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ v.name }}</div>
+                  <div style="font-size:clamp(11px,1vw,15px);font-weight:800;color:{{ v.color }}">{{ v.voteLabel }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <sc-if value="{{ isRevealed }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;inset:0;background:{{ revealBg }};display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:20;overflow:hidden">
+        {{ confetti }}
+        <div style="font-size:clamp(13px,1.4vw,22px);font-weight:800;letter-spacing:4px;color:#fff;opacity:.9;animation:gr-pop .5s both">EL RESULTADO ES…</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(60px,12vw,200px);font-weight:700;color:#fff;line-height:.95;animation:gr-pop .6s .1s both;text-shadow:0 12px 40px rgba(0,0,0,.18)">{{ revealLabel }}</div>
+      </div>
+      </sc-if>
+
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ============ ADMIN ============ -->
+  <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:980px;margin:0 auto;padding:34px 22px 60px">
+    <div style="font-size:12px;font-weight:800;letter-spacing:2.5px;color:#B9A7F7">PANEL DE CONTROL</div>
+    <h1 style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:38px;margin:4px 0 24px;color:#3a3349">Administración del evento</h1>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px">
+      <div style="background:#fff;border-radius:18px;padding:18px 20px;box-shadow:0 10px 30px -22px rgba(106,79,201,.5)">
+        <div style="font-size:12px;font-weight:800;letter-spacing:1px;color:#a99fb6">TOTAL</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:700;color:#6A4FC9;line-height:1.1">{{ total }}</div>
+      </div>
+      <div style="background:#fff;border-radius:18px;padding:18px 20px;box-shadow:0 10px 30px -22px rgba(106,79,201,.5);border-top:4px solid #8ECDF7">
+        <div style="font-size:12px;font-weight:800;letter-spacing:1px;color:#2C6E8F">NIÑO</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:700;color:#2C6E8F;line-height:1.1">{{ ninoCount }}</div>
+      </div>
+      <div style="background:#fff;border-radius:18px;padding:18px 20px;box-shadow:0 10px 30px -22px rgba(106,79,201,.5);border-top:4px solid #F7A8C8">
+        <div style="font-size:12px;font-weight:800;letter-spacing:1px;color:#B14B7E">NIÑA</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:700;color:#B14B7E;line-height:1.1">{{ ninaCount }}</div>
+      </div>
+      <div style="background:#fff;border-radius:18px;padding:18px 20px;box-shadow:0 10px 30px -22px rgba(106,79,201,.5)">
+        <div style="font-size:12px;font-weight:800;letter-spacing:1px;color:#a99fb6">MENSAJES</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:700;color:#4A4458;line-height:1.1">{{ messageCount }}</div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border-radius:20px;padding:22px 24px;margin-bottom:22px;box-shadow:0 10px 30px -22px rgba(106,79,201,.5)">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;color:#3a3349;margin-bottom:4px">Revelar el resultado</div>
+      <p style="font-size:14px;color:#8a8398;margin:0 0 16px">Muestra la revelación a pantalla completa en el Dashboard.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <button onClick="{{ revealNino }}" style="flex:1;min-width:140px;border:none;border-radius:14px;padding:15px;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;background:#8ECDF7;color:#1f5273">Revelar NIÑO</button>
+        <button onClick="{{ revealNina }}" style="flex:1;min-width:140px;border:none;border-radius:14px;padding:15px;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;background:#F7A8C8;color:#8d2f5d">Revelar NIÑA</button>
+        <button onClick="{{ hideReveal }}" style="flex:1;min-width:140px;border:2px solid #ecdfd2;border-radius:14px;padding:15px;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;background:#fff;color:#8a8398">Ocultar</button>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px;border-top:1px solid #f0e8df;padding-top:14px">
+        <button onClick="{{ simulateVote }}" style="border:none;border-radius:12px;padding:11px 16px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;background:#B9A7F7;color:#fff">+ Simular votante</button>
+        <button onClick="{{ resetAll }}" style="border:none;border-radius:12px;padding:11px 16px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;background:#f3e9df;color:#a4677f">Reiniciar votación</button>
+      </div>
+    </div>
+
+    <div style="background:#fff;border-radius:20px;padding:8px 8px 12px;box-shadow:0 10px 30px -22px rgba(106,79,201,.5)">
+      <div style="display:flex;justify-content:space-between;padding:14px 16px 10px"><div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:#3a3349">Votos registrados</div></div>
+      <div style="max-height:360px;overflow-y:auto">
+        <sc-for list="{{ voters }}" as="v" hint-placeholder-count="6">
+          <div style="display:flex;align-items:center;gap:14px;padding:12px 16px;border-top:1px solid #f5ede4">
+            <div style="width:38px;height:38px;border-radius:50%;background-color:{{ v.soft }};background-image:{{ v.avatarBg }};background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;font-weight:800;color:{{ v.color }};flex:none">{{ v.initial }}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:800;color:#3a3349;font-size:15px">{{ v.name }}</div>
+              <div style="font-size:13px;color:#9a93a6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ v.message }}</div>
+            </div>
+            <div style="font-size:11px;font-weight:800;letter-spacing:.5px;color:{{ v.color }};background:{{ v.soft }};padding:5px 11px;border-radius:99px;flex:none">{{ v.voteLabel }}</div>
+            <div style="font-size:12px;color:#bdb4c6;flex:none;width:64px;text-align:right">{{ v.timeLabel }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:860},&quot;parentNames&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Héctor y Liz&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;autoSimulate&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;revealWinner&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;none&quot;,&quot;nino&quot;,&quot;nina&quot;],&quot;default&quot;:&quot;nina&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = {
+    view: 'dashboard',
+    guestStep: 'register',
+    name: '', selectedVote: null, messageText: '', photo: null, cameraError: false,
+    reveal: null,
+    votes: (() => {
+      const now = Date.now();
+      const s = [
+        ['Mariana','nina','Tiene cara de princesa, estoy segura.',42],
+        ['Carlos','nino','¡Va a ser todo un campeón!',39],
+        ['Ana','nina','El instinto de tía nunca falla.',35],
+        ['Luis','nino','Apuesto por el niño, sin dudarlo.',31],
+        ['Sofía','nina','Pura calma… definitivamente niña.',27],
+        ['Diego','nino','Niño. Ya le compré el balón.',24],
+        ['Regina','nina','Rosa todo el camino, felicidades.',20],
+        ['Pablo','nino','',17],
+        ['Fernanda','nina','No puedo esperar a conocerla.',14],
+        ['Andrés','nino','Será igualito a su papá.',11],
+        ['Valeria','nina','Las niñas mandan en esta familia.',8],
+        ['Roberto','nino','Mi corazón dice niño.',5],
+        ['Camila','nina','Llegará llena de amor.',3],
+        ['Jorge','nino','',1],
+      ];
+      return s.map((x,i) => ({ id:'seed'+i, name:x[0], vote:x[1], message:x[2], ts: now - x[3]*60000 }));
+    })(),
+  };
+
+  simNames = ['Lucía','Mateo','Daniela','Emiliano','Renata','Santiago','Isabella','Gael','Ximena','Leonardo','Victoria','Sebastián','Romina','Adrián','Paola'];
+  simMsgs = ['¡Felicidades a los futuros papás!','Mi corazón dice que sí.','Que llegue con mucha salud.','No puedo esperar a conocer al bebé.','Será amado por toda la familia.',''];
+  ninoRef = React.createRef();
+  ninaRef = React.createRef();
+  ninoCardRef = React.createRef();
+  ninaCardRef = React.createRef();
+  videoRef = React.createRef();
+
+  componentDidMount(){
+    const r = this.props.revealWinner;
+    if (r && r !== 'none') this.setState({ reveal: r });
+    this.syncBars();
+    if (this.props.autoSimulate !== false) {
+      this.timer = setInterval(() => {
+        if (this.state.votes.length < 80) this.addVote(this.randVote());
+      }, 3600);
+    }
+  }
+  componentDidUpdate(prevProps, prevState){
+    this.syncBars(); this.syncCards();
+    if (this.state.guestStep==='photo' && prevState.guestStep!=='photo' && !this.state.photo) this.startCamera();
+    if (prevState.guestStep==='photo' && this.state.guestStep!=='photo') this.stopCamera();
+  }
+  componentWillUnmount(){ clearInterval(this.timer); this.stopCamera(); }
+
+  async startCamera(){
+    this.setState({ cameraError:false });
+    try {
+      this.stream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user' }, audio:false });
+      if (this.state.guestStep!=='photo'){ this.stopCamera(); return; }
+      if (this.videoRef.current){ this.videoRef.current.srcObject = this.stream; }
+    } catch(e){ this.setState({ cameraError:true }); }
+  }
+  stopCamera(){ if (this.stream){ this.stream.getTracks().forEach(t=>t.stop()); this.stream=null; } }
+
+  capturePhoto = () => {
+    const v = this.videoRef.current;
+    if (!v || !v.videoWidth) return;
+    const size = Math.min(v.videoWidth, v.videoHeight);
+    const c = document.createElement('canvas');
+    c.width = c.height = 320;
+    const ctx = c.getContext('2d');
+    ctx.translate(320,0); ctx.scale(-1,1);
+    ctx.drawImage(v, (v.videoWidth-size)/2, (v.videoHeight-size)/2, size, size, 0, 0, 320, 320);
+    const data = c.toDataURL('image/jpeg', 0.82);
+    this.stopCamera();
+    this.setState({ photo:data });
+  };
+  retakePhoto = () => { this.setState({ photo:null }, () => this.startCamera()); };
+  onFile = e => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => this.setState({ photo:r.result, cameraError:false });
+    r.readAsDataURL(f);
+  };
+
+  syncBars(){
+    const votes = this.state.votes;
+    const total = votes.length;
+    const nino = votes.filter(v => v.vote==='nino').length;
+    const pct = total ? Math.round(((nino + 0.7)/(total + 1.4))*100) : 50;
+    if (this.ninoRef.current) this.ninoRef.current.style.width = pct + '%';
+    if (this.ninaRef.current) this.ninaRef.current.style.width = (100 - pct) + '%';
+  }
+
+  syncCards(){
+    const sel = this.state.selectedVote;
+    const no = this.ninoCardRef.current, na = this.ninaCardRef.current;
+    const idle = '0 4px 16px -10px rgba(106,79,201,.35)';
+    if (no){
+      const on = sel==='nino';
+      no.style.borderColor = on ? '#8ECDF7' : '#f0e7dd';
+      no.style.boxShadow = on ? '0 14px 30px -16px rgba(142,205,247,.95)' : idle;
+      no.style.transform = on ? 'translateY(-3px)' : 'none';
+    }
+    if (na){
+      const on = sel==='nina';
+      na.style.borderColor = on ? '#F7A8C8' : '#f0e7dd';
+      na.style.boxShadow = on ? '0 14px 30px -16px rgba(247,168,200,.95)' : idle;
+      na.style.transform = on ? 'translateY(-3px)' : 'none';
+    }
+  }
+
+  randVote(){
+    const n = this.simNames[Math.floor(Math.random()*this.simNames.length)];
+    const vote = Math.random() < 0.5 ? 'nino' : 'nina';
+    const m = this.simMsgs[Math.floor(Math.random()*this.simMsgs.length)];
+    return { id:'sim'+Date.now()+Math.random(), name:n, vote, message:m, ts:Date.now() };
+  }
+  addVote(v){ this.setState(s => ({ votes:[...s.votes, v] })); }
+
+  rel(ts){
+    const sec = (Date.now()-ts)/1000;
+    if (sec < 60) return 'ahora';
+    const m = Math.floor(sec/60);
+    if (m < 60) return 'hace '+m+'m';
+    return 'hace '+Math.floor(m/60)+'h';
+  }
+
+  showGuest = () => this.setState({ view:'guest' });
+  showDashboard = () => this.setState({ view:'dashboard' });
+  showAdmin = () => this.setState({ view:'admin' });
+
+  onName = e => this.setState({ name: e.target.value });
+  onMessage = e => this.setState({ messageText: e.target.value });
+  goVote = () => { if (this.state.name.trim()) this.setState({ guestStep:'vote' }); };
+  selectNino = () => this.setState({ selectedVote:'nino' });
+  selectNina = () => this.setState({ selectedVote:'nina' });
+  goPhoto = () => { if (this.state.selectedVote) this.setState({ guestStep:'photo' }); };
+  goMessage = () => { if (this.state.selectedVote) this.setState({ guestStep:'message' }); };
+  backToVote = () => this.setState({ guestStep:'vote' });
+  submitVote = () => {
+    const { name, selectedVote, messageText, photo } = this.state;
+    this.addVote({ id:'g'+Date.now(), name:name.trim()||'Invitado', vote:selectedVote, message:messageText.trim(), photo, ts:Date.now() });
+    this.setState({ guestStep:'done' });
+  };
+  resetGuest = () => { this.stopCamera(); this.setState({ guestStep:'register', name:'', selectedVote:null, messageText:'', photo:null, cameraError:false }); };
+
+  revealNino = () => this.setState({ reveal:'nino' });
+  revealNina = () => this.setState({ reveal:'nina' });
+  hideReveal = () => this.setState({ reveal:null });
+  resetAll = () => this.setState({ votes:[], reveal:null });
+  simulateVote = () => this.addVote(this.randVote());
+
+  navStyle(active){
+    return { border:'none', cursor:'pointer', fontFamily:'inherit', fontWeight:800, fontSize:'13px', padding:'7px 16px', borderRadius:'999px',
+      background: active ? '#6A4FC9' : 'transparent', color: active ? '#fff' : '#9a8fb0', transition:'all .2s' };
+  }
+
+  renderVals(){
+    const s = this.state;
+    const votes = s.votes;
+    const ninoCount = votes.filter(v => v.vote==='nino').length;
+    const ninaCount = votes.filter(v => v.vote==='nina').length;
+    const total = votes.length;
+    const ninoPct = total ? Math.round(ninoCount/total*100) : 50;
+    const ninaPct = total ? 100 - ninoPct : 50;
+
+    const colorFor = v => v==='nino' ? '#2C6E8F' : '#B14B7E';
+    const softFor = v => v==='nino' ? '#e3f3fd' : '#fce6f0';
+
+    const cssUrl = p => p ? ('url("'+p+'")') : 'none';
+    const recentVoters = votes.slice(-5).reverse().map(v => ({
+      name: v.name,
+      voteLabel: v.vote==='nino' ? 'Niño' : 'Niña',
+      color: colorFor(v.vote), soft: softFor(v.vote),
+      barColor: v.vote==='nino' ? '#8ECDF7' : '#F7A8C8',
+      initial: v.photo ? '' : (v.name||'?').trim().charAt(0).toUpperCase(),
+      avatarBg: cssUrl(v.photo),
+    }));
+    const voters = votes.slice().reverse().map(v => ({
+      ...v,
+      voteLabel: v.vote==='nino' ? 'NIÑO' : 'NIÑA',
+      color: colorFor(v.vote), soft: softFor(v.vote),
+      initial: v.photo ? '' : (v.name||'?').trim().charAt(0).toUpperCase(),
+      avatarBg: cssUrl(v.photo),
+      message: v.message || '—',
+      timeLabel: this.rel(v.ts),
+    }));
+
+    const selV = s.selectedVote;
+
+    const reveal = s.reveal;
+    const confColors = ['#ffffff','#FFF7EF','#B9A7F7'];
+    const confetti = reveal ? Array.from({length:26}).map((_,i) => React.createElement('div',{ key:i, style:{
+      position:'absolute', top:0, left:(Math.random()*100)+'%', width:(8+Math.random()*10)+'px', height:(8+Math.random()*10)+'px',
+      borderRadius: Math.random()>.5 ? '50%' : '3px',
+      background: confColors[i%3],
+      animation:`gr-fall ${2.4+Math.random()*1.8}s ${Math.random()*1.2}s linear infinite`, opacity:.9, zIndex:1 } })) : null;
+
+    return {
+      total, ninoCount, ninaCount, ninoPct, ninaPct,
+      messageCount: votes.filter(v => v.message).length,
+      ninoRef: this.ninoRef, ninaRef: this.ninaRef,
+      ninoCardRef: this.ninoCardRef, ninaCardRef: this.ninaCardRef,
+      parentNames: this.props.parentNames ?? 'Héctor y Liz',
+
+      isGuest: s.view==='guest', isDash: s.view==='dashboard', isAdmin: s.view==='admin',
+      notGuest: s.view!=='guest', notDash: s.view!=='dashboard', notAdmin: s.view!=='admin',
+      showGuest:this.showGuest, showDashboard:this.showDashboard, showAdmin:this.showAdmin,
+
+      guestStep:s.guestStep, isRegister:s.guestStep==='register', isVote:s.guestStep==='vote', isMessage:s.guestStep==='message', isDone:s.guestStep==='done',
+      name:s.name, nameUpper:(s.name||'').toUpperCase(), onName:this.onName, messageText:s.messageText, onMessage:this.onMessage,
+      goVote:this.goVote, selectNino:this.selectNino, selectNina:this.selectNina, goPhoto:this.goPhoto, goMessage:this.goMessage, backToVote:this.backToVote, submitVote:this.submitVote, resetGuest:this.resetGuest,
+      isPhoto: s.guestStep==='photo', videoRef:this.videoRef, photo:s.photo, photoBg: cssUrl(s.photo),
+      noPhoto: !s.photo && !s.cameraError, hasPhoto: !!s.photo, cameraError: s.cameraError && !s.photo,
+      capturePhoto:this.capturePhoto, retakePhoto:this.retakePhoto, onFile:this.onFile,
+      donePhotoBg: cssUrl(s.photo), doneDotOpacity: s.photo ? 0 : 1,
+      canName: !!s.name.trim(), cantName: !s.name.trim(),
+      hasVote: !!selV, noVote: !selV,
+      ninoSel: selV==='nino', ninaSel: selV==='nina',
+      voteLabel: selV==='nino' ? 'Niño' : 'Niña', voteColor: selV==='nino' ? '#8ECDF7' : '#F7A8C8', voteSoft: selV==='nino' ? '#e3f3fd' : '#fce6f0',
+
+      recentVoters, voters,
+
+      isRevealed: !!reveal, reveal,
+      revealLabel: reveal==='nino' ? '¡Es niño!' : '¡Es niña!',
+      revealBg: reveal==='nino' ? 'linear-gradient(160deg,#8ECDF7,#5fb6ee)' : 'linear-gradient(160deg,#F7A8C8,#ef84b1)',
+      confetti,
+      revealNino:this.revealNino, revealNina:this.revealNina, hideReveal:this.hideReveal, resetAll:this.resetAll, simulateVote:this.simulateVote,
+    };
+  }
+}
+</script>
+</body>
+</html>
