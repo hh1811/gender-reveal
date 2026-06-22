@@ -31,6 +31,11 @@ const config: Config = {
           "0%": { transform: "translateY(18px)", opacity: "0" },
           "100%": { transform: "translateY(0)", opacity: "1" },
         },
+        "gr-confetti": {
+          "0%": { transform: "translateY(0) rotate(0deg)", opacity: "0" },
+          "12%": { opacity: "1" },
+          "100%": { transform: "translateY(150px) rotate(280deg)", opacity: "0" },
+        },
       },
       animation: {
         "gr-float": "gr-float 4s ease-in-out infinite",
@@ -38,6 +43,7 @@ const config: Config = {
         "gr-pop": "gr-pop .5s ease-out both",
         "gr-fall": "gr-fall 2.4s linear infinite",
         "gr-rise": "gr-rise .4s ease-out both",
+        "gr-confetti": "gr-confetti 1.8s cubic-bezier(.21,.61,.35,1) forwards",
       },
     },
   },

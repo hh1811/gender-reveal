@@ -29,7 +29,7 @@ export function PhotoStep({
     <div className="my-auto text-center">
       <div className="text-[12px] font-extrabold tracking-[2px] text-[#B9A7F7]">UNA FOTO DEL MOMENTO</div>
       <h1 className="font-serif font-bold text-[38px] leading-[1.05] mt-2 mb-1 text-[#3a3349]">¡Sonríe!</h1>
-      <p className="text-[15px] text-[#8a8398] mb-[18px]">Tu foto aparecerá junto a tu voto.</p>
+      <p className="text-[15px] text-[#766d89] mb-[18px]">Tu foto aparecerá junto a tu voto.</p>
 
       <div
         className="relative w-[212px] h-[212px] rounded-full overflow-hidden mx-auto mb-2 border-4 border-white"
@@ -68,7 +68,7 @@ export function PhotoStep({
           >
             Tomar foto
           </button>
-          <label className="block w-full mt-[10px] border-2 border-[#ecdfd2] rounded-2xl py-[13px] text-[15px] font-extrabold text-[#8a8398] cursor-pointer">
+          <label className="block w-full mt-[10px] border-2 border-[#ecdfd2] rounded-2xl py-[13px] text-[15px] font-extrabold text-[#766d89] cursor-pointer">
             Subir una foto
             <input
               type="file"
@@ -94,7 +94,7 @@ export function PhotoStep({
           </button>
           <button
             onClick={onRetake}
-            className="w-full mt-[10px] bg-transparent border-2 border-[#ecdfd2] rounded-2xl py-[13px] text-[#8a8398] text-[15px] font-extrabold cursor-pointer"
+            className="w-full mt-[10px] bg-transparent border-2 border-[#ecdfd2] rounded-2xl py-[13px] text-[#766d89] text-[15px] font-extrabold cursor-pointer"
           >
             Repetir
           </button>

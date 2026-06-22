@@ -17,7 +17,7 @@ export function MessageStep({
       <h1 className="font-serif font-bold text-[34px] leading-[1.08] mt-2 mb-1 text-center text-[#3a3349]">
         Un mensaje para los papás
       </h1>
-      <p className="text-center text-[15px] text-[#8a8398] mb-[22px]">Opcional, pero les encantará leerlo.</p>
+      <p className="text-center text-[15px] text-[#766d89] mb-[22px]">Opcional, pero les encantará leerlo.</p>
       <textarea
         value={message}
         onChange={(e) => onMessageChange(e.target.value)}

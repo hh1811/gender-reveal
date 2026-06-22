@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import type { VoteChoice } from "@/lib/types";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { VoteChoice, VotesPayload } from "@/lib/types";
+import { useLiveVotes } from "@/lib/useLiveVotes";
 import { RegisterStep } from "./RegisterStep";
 import { VoteStep } from "./VoteStep";
 import { PhotoStep } from "./PhotoStep";
@@ -10,7 +11,15 @@ import { DoneStep } from "./DoneStep";
 
 type Step = "register" | "vote" | "photo" | "message" | "done";
 
-export function GuestFlow() {
+export function GuestFlow({ initialVotes }: { initialVotes: VotesPayload }) {
+  const { votes } = useLiveVotes(initialVotes);
+  const { ninoCount, ninaCount } = useMemo(
+    () => ({
+      ninoCount: votes.filter((v) => v.vote === "nino").length,
+      ninaCount: votes.filter((v) => v.vote === "nina").length,
+    }),
+    [votes],
+  );
   const [step, setStep] = useState<Step>("register");
   const [name, setName] = useState("");
   const [selectedVote, setSelectedVote] = useState<VoteChoice | null>(null);
@@ -121,7 +130,13 @@ export function GuestFlow() {
       <div className="w-full max-w-[420px] flex flex-col">
         {step === "register" && <RegisterStep name={name} onNameChange={setName} onContinue={goVote} />}
         {step === "vote" && (
-          <VoteStep name={name} selectedVote={selectedVote} onSelect={setSelectedVote} onContinue={goPhoto} />
+          <VoteStep
+            selectedVote={selectedVote}
+            ninoCount={ninoCount}
+            ninaCount={ninaCount}
+            onSelect={setSelectedVote}
+            onContinue={goPhoto}
+          />
         )}
         {step === "photo" && (
           <PhotoStep
@@ -144,7 +159,7 @@ export function GuestFlow() {
           />
         )}
         {step === "done" && selectedVote && (
-          <DoneStep name={name.trim() || "Invitado"} vote={selectedVote} photo={photo} onVoteAgain={resetGuest} />
+          <DoneStep vote={selectedVote} photo={photo} onVoteAgain={resetGuest} />
         )}
       </div>
     </div>
