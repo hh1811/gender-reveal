@@ -11,9 +11,15 @@ export interface Vote {
   createdAt: string;
 }
 
+export interface RaffleWinner {
+  id: string;
+  name: string;
+}
+
 export interface EventSettings {
   reveal: Reveal;
   parentNames: string;
+  raffleWinner: RaffleWinner | null;
 }
 
 export interface VotesPayload {

@@ -16,15 +16,21 @@ export function SocialCarousel({ votes }: { votes: Vote[] }) {
 
   if (votes.length === 0) return null;
   const items = votes.slice(-24).reverse();
+  const shouldLoop = items.length >= 6;
   const duration = Math.max(24, items.length * 3.2);
+  const displayItems = shouldLoop ? [...items, ...items] : items;
 
   return (
     <div className="overflow-hidden">
       <div
-        className="flex items-center"
-        style={{ gap: "clamp(18px,2.4vw,40px)", width: "max-content", animation: `gr-marquee ${duration}s linear infinite` }}
+        className={shouldLoop ? "flex items-center" : "flex items-center justify-center"}
+        style={
+          shouldLoop
+            ? { gap: "clamp(18px,2.4vw,40px)", width: "max-content", animation: `gr-marquee ${duration}s linear infinite` }
+            : { gap: "clamp(18px,2.4vw,40px)" }
+        }
       >
-        {[...items, ...items].map((v, i) => {
+        {displayItems.map((v, i) => {
           const isNew = now - new Date(v.createdAt).getTime() < NEW_BADGE_MS;
           return (
             <div key={`${v.id}-${i}`} className="flex flex-col items-center relative" style={{ gap: 4 }}>

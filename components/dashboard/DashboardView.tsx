@@ -4,11 +4,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Vote, VoteChoice, VotesPayload } from "@/lib/types";
 import { useLiveVotes } from "@/lib/useLiveVotes";
 import { useCountUp } from "@/lib/useCountUp";
+import { useRevealPhase } from "@/lib/useRevealPhase";
 import { relativeTimeSeconds } from "@/lib/voteDisplay";
 import { Orb } from "@/components/shared/Orb";
 import { Halo } from "@/components/shared/Halo";
 import { Avatar } from "@/components/shared/Avatar";
 import { Sparkles } from "@/components/reveal/Sparkles";
+import { RevealScreen } from "@/components/reveal/RevealScreen";
 import { SocialCarousel } from "@/components/dashboard/SocialCarousel";
 import { AmbientParticles } from "@/components/dashboard/AmbientParticles";
 import { BABY_LABEL, COUNTDOWN_TARGET_ISO, EVENT_DATE_LABEL } from "@/lib/eventConfig";
@@ -166,9 +168,14 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
   const pageMessages = showFeatured ? [] : messages.slice(currentPage * pageSize, currentPage * pageSize + pageSize);
   const featured = showFeatured ? messages[Math.floor(tick / 3) % messages.length] : null;
 
+  const revealPhase = useRevealPhase(settings.reveal);
+  if (settings.reveal !== "none") {
+    return <RevealScreen reveal={settings.reveal} phase={revealPhase} votes={votes} />;
+  }
+
   return (
     <div
-      className="relative min-h-screen w-screen overflow-hidden flex flex-col"
+      className="relative h-screen w-screen overflow-hidden flex flex-col"
       style={{
         background:
           "radial-gradient(circle at 8% -10%, rgba(142,205,247,.3), transparent 46%), radial-gradient(circle at 94% -8%, rgba(247,168,200,.28), transparent 48%), #faf6f0",
@@ -222,7 +229,7 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
         </div>
       )}
 
-      <div className="relative flex-1 flex items-center justify-center" style={{ margin: "clamp(8px,1.2vw,16px) 0" }}>
+      <div className="relative flex-1 min-h-0 flex items-center justify-center" style={{ margin: "clamp(8px,1.2vw,16px) 0" }}>
         {leaderBanner && (
           <div className="absolute inset-x-0 top-0 flex flex-col items-center animate-gr-slide-down" style={{ zIndex: 6 }}>
             <div

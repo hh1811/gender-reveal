@@ -67,6 +67,11 @@ const config: Config = {
           "0%, 100%": { transform: "translate(0,0)", opacity: ".25" },
           "50%": { transform: "translate(6px,-16px)", opacity: ".6" },
         },
+        "gr-ring-expand": {
+          "0%": { transform: "scale(.3)", opacity: ".55" },
+          "70%": { opacity: ".12" },
+          "100%": { transform: "scale(1.9)", opacity: "0" },
+        },
       },
       animation: {
         "gr-float": "gr-float 4s ease-in-out infinite",
@@ -82,6 +87,7 @@ const config: Config = {
         "gr-orb-pulse": "gr-orb-pulse .4s ease-out",
         "gr-fade-in": "gr-fade-in .5s ease-out both",
         "gr-particle-drift": "gr-particle-drift 8s ease-in-out infinite",
+        "gr-ring-expand": "gr-ring-expand 2.6s ease-out infinite",
       },
     },
   },

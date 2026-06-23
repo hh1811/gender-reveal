@@ -1,5 +1,5 @@
 import "server-only";
-import type { EventSettings, Vote } from "./types";
+import type { EventSettings, RaffleWinner, Vote } from "./types";
 
 interface MockState {
   votes: Vote[];
@@ -44,6 +44,7 @@ function getState(): MockState {
       settings: {
         reveal: "none",
         parentNames: process.env.NEXT_PUBLIC_PARENT_NAMES || "Héctor y Liz",
+        raffleWinner: null,
       },
     };
   }
@@ -66,8 +67,12 @@ export const mockStore = {
     const s = getState();
     s.votes = [];
     s.settings.reveal = "none";
+    s.settings.raffleWinner = null;
   },
   setReveal(reveal: EventSettings["reveal"]): void {
     getState().settings.reveal = reveal;
+  },
+  setRaffleWinner(winner: RaffleWinner | null): void {
+    getState().settings.raffleWinner = winner;
   },
 };

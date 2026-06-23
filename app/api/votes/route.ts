@@ -18,7 +18,11 @@ export async function POST(req: NextRequest) {
 
   let photoUrl: string | null = null;
   if (photoDataUrl) {
-    photoUrl = await uploadPhoto(photoDataUrl);
+    try {
+      photoUrl = await uploadPhoto(photoDataUrl);
+    } catch (err) {
+      console.error("uploadPhoto failed, registering vote without photo:", err);
+    }
   }
 
   const created = await insertVote({ name, vote, message, photoUrl });

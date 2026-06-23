@@ -2,7 +2,7 @@ import "server-only";
 import { isSupabaseConfigured } from "./env";
 import { getSupabaseAdmin } from "./supabaseAdmin";
 import { mockStore } from "./mockStore";
-import type { EventSettings, Reveal, Vote, VotesPayload } from "./types";
+import type { EventSettings, RaffleWinner, Reveal, Vote, VotesPayload } from "./types";
 
 type VoteRow = {
   id: string;
@@ -32,6 +32,9 @@ export async function getVotesPayload(): Promise<VotesPayload> {
   const settings: EventSettings = {
     reveal: settingsRes.data.reveal,
     parentNames: settingsRes.data.parent_names,
+    raffleWinner: settingsRes.data.raffle_winner_id
+      ? { id: settingsRes.data.raffle_winner_id, name: settingsRes.data.raffle_winner_name }
+      : null,
   };
   return { votes, settings };
 }
@@ -65,6 +68,23 @@ export async function setReveal(reveal: Reveal): Promise<void> {
   if (error) throw error;
 }
 
+export async function setRaffleWinner(winner: RaffleWinner | null): Promise<void> {
+  if (!isSupabaseConfigured) {
+    mockStore.setRaffleWinner(winner);
+    return;
+  }
+  const sb = getSupabaseAdmin()!;
+  const { error } = await sb
+    .from("event_settings")
+    .update({
+      raffle_winner_id: winner?.id ?? null,
+      raffle_winner_name: winner?.name ?? null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", 1);
+  if (error) throw error;
+}
+
 export async function resetVotes(): Promise<void> {
   if (!isSupabaseConfigured) {
     mockStore.resetVotes();
@@ -75,7 +95,7 @@ export async function resetVotes(): Promise<void> {
   if (delErr) throw delErr;
   const { error: revErr } = await sb
     .from("event_settings")
-    .update({ reveal: "none", updated_at: new Date().toISOString() })
+    .update({ reveal: "none", raffle_winner_id: null, raffle_winner_name: null, updated_at: new Date().toISOString() })
     .eq("id", 1);
   if (revErr) throw revErr;
 }
