@@ -3,7 +3,8 @@
 import { useMemo, useState } from "react";
 import type { VotesPayload } from "@/lib/types";
 import { useLiveVotes } from "@/lib/useLiveVotes";
-import { colorFor, initialFor, relativeTime, softFor } from "@/lib/voteDisplay";
+import { colorFor, relativeTime, softFor } from "@/lib/voteDisplay";
+import { Avatar } from "@/components/shared/Avatar";
 
 async function postJson(url: string, body?: unknown) {
   await fetch(url, {
@@ -28,10 +29,10 @@ export function AdminView({ initial }: { initial: VotesPayload }) {
       .map((v) => ({
         id: v.id,
         name: v.name,
+        vote: v.vote,
         voteLabel: v.vote === "nino" ? "NIÑO" : "NIÑA",
         color: colorFor(v.vote),
         soft: softFor(v.vote),
-        initial: v.photoUrl ? "" : initialFor(v.name),
         photoUrl: v.photoUrl,
         message: v.message || "—",
         timeLabel: relativeTime(v.createdAt),
@@ -179,18 +180,7 @@ export function AdminView({ initial }: { initial: VotesPayload }) {
         <div className="max-h-[360px] overflow-y-auto">
           {voters.map((v) => (
             <div key={v.id} className="flex items-center gap-[14px] px-4 py-3 border-t border-[#f5ede4]">
-              <div
-                className="w-[38px] h-[38px] rounded-full flex items-center justify-center font-extrabold flex-none"
-                style={{
-                  backgroundColor: v.soft,
-                  backgroundImage: v.photoUrl ? `url("${v.photoUrl}")` : "none",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  color: v.color,
-                }}
-              >
-                {v.initial}
-              </div>
+              <Avatar name={v.name} vote={v.vote} photoUrl={v.photoUrl} size={38} />
               <div className="flex-1 min-w-0">
                 <div className="font-extrabold text-[#3a3349] text-[15px]">{v.name}</div>
                 <div className="text-[13px] text-[#9a93a6] overflow-hidden text-ellipsis whitespace-nowrap">{v.message}</div>

@@ -78,7 +78,7 @@ export function RevealScreen({
             </div>
           )}
           {(phase === "celebrate" || phase === "settled") && <Sparkles seed={reveal} />}
-          {phase === "settled" && votes.length > 0 && (
+          {phase === "settled" && showFooter && votes.length > 0 && (
             <div className="animate-gr-rise" style={{ marginTop: "clamp(32px,5vh,56px)", maxWidth: "min(90vw,1200px)" }}>
               <div
                 className="font-extrabold tracking-[2px] text-white text-center"

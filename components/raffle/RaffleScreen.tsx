@@ -96,7 +96,7 @@ export function RaffleScreen({
           className="mt-10 border-none rounded-2xl py-4 px-10 font-extrabold cursor-pointer bg-[#B9A7F7] text-white disabled:opacity-40"
           style={{ fontSize: "clamp(16px,1.8vw,22px)", letterSpacing: 1, boxShadow: "0 14px 30px -10px rgba(185,167,247,.6)" }}
         >
-          {busy ? "Sorteando…" : "🎉 Rifar"}
+          {busy ? "Sorteando…" : "🎲 Rifar"}
         </button>
         {error && (
           <p className="text-[#F7A8C8] font-bold mt-4" style={{ fontSize: "clamp(12px,1.2vw,15px)" }}>

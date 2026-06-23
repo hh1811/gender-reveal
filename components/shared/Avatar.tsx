@@ -1,4 +1,6 @@
-import type { CSSProperties } from "react";
+"use client";
+
+import { useState, type CSSProperties } from "react";
 import type { VoteChoice } from "@/lib/types";
 import { colorFor, initialFor, softFor } from "@/lib/voteDisplay";
 
@@ -21,25 +23,33 @@ export function Avatar({
   className?: string;
   style?: CSSProperties;
 }) {
+  const [broken, setBroken] = useState(false);
   const border = BORDER[vote];
+  const showPhoto = !!photoUrl && !broken;
   return (
     <div
-      className={`rounded-full flex items-center justify-center font-extrabold flex-none ${className}`}
+      className={`relative overflow-hidden rounded-full flex items-center justify-center font-extrabold flex-none ${className}`}
       style={{
         width: size,
         height: size,
         color: colorFor(vote),
         background: softFor(vote),
-        backgroundImage: photoUrl ? `url("${photoUrl}")` : undefined,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
         border: `2px solid ${border}`,
         boxShadow: glow ? `0 0 18px 4px ${border}66` : undefined,
         fontSize: size * 0.4,
         ...style,
       }}
     >
-      {!photoUrl && initialFor(name)}
+      {showPhoto && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={photoUrl}
+          alt={name}
+          onError={() => setBroken(true)}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      )}
+      {!showPhoto && initialFor(name)}
     </div>
   );
 }
