@@ -7,7 +7,17 @@ import { Avatar } from "@/components/shared/Avatar";
 import { AmbientParticles } from "@/components/dashboard/AmbientParticles";
 import { Sparkles } from "./Sparkles";
 
-export function RevealScreen({ reveal, phase, votes }: { reveal: VoteChoice; phase: RevealPhase; votes: Vote[] }) {
+export function RevealScreen({
+  reveal,
+  phase,
+  votes,
+  showFooter = true,
+}: {
+  reveal: VoteChoice;
+  phase: RevealPhase;
+  votes: Vote[];
+  showFooter?: boolean;
+}) {
   const isNino = reveal === "nino";
   const dominantBg = isNino
     ? "linear-gradient(160deg,#bfe4fb,#5fb6ee 60%,#2f86cb)"
@@ -88,7 +98,7 @@ export function RevealScreen({ reveal, phase, votes }: { reveal: VoteChoice; pha
               </div>
             </div>
           )}
-          {phase === "settled" && (
+          {phase === "settled" && showFooter && (
             <p
               className="absolute font-bold text-white animate-gr-rise"
               style={{ bottom: "clamp(20px,4vh,48px)", fontSize: "clamp(13px,1.4vw,20px)", opacity: 0.85 }}

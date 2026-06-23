@@ -169,7 +169,7 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
 
   const revealPhase = useRevealPhase(settings.reveal);
   if (settings.reveal !== "none") {
-    return <RevealScreen reveal={settings.reveal} phase={revealPhase} votes={votes} />;
+    return <RevealScreen reveal={settings.reveal} phase={revealPhase} votes={votes} showFooter={false} />;
   }
 
   return (

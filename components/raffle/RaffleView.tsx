@@ -8,7 +8,8 @@ import { RaffleScreen } from "./RaffleScreen";
 export function RaffleView({ initial }: { initial: VotesPayload }) {
   const { votes, settings } = useLiveVotes(initial);
   const phase = useRafflePhase(settings.raffleDrawnAt);
-  const eligible = settings.reveal === "none" ? [] : votes.filter((v) => v.vote === settings.reveal);
+  const revealed = settings.reveal !== "none";
+  const eligible = revealed ? votes.filter((v) => v.vote === settings.reveal) : [];
 
-  return <RaffleScreen phase={phase} eligible={eligible} winner={settings.raffleWinner} />;
+  return <RaffleScreen phase={phase} eligible={eligible} winner={settings.raffleWinner} revealed={revealed} />;
 }

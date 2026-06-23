@@ -11,25 +11,98 @@ export function RaffleScreen({
   phase,
   eligible,
   winner,
+  revealed,
 }: {
   phase: RafflePhase;
   eligible: Vote[];
   winner: RaffleWinner | null;
+  revealed: boolean;
 }) {
   const [spinIndex, setSpinIndex] = useState(0);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     if (phase !== "drawing" || eligible.length === 0) return;
     const id = setInterval(() => setSpinIndex((i) => i + 1), 130);
     return () => clearInterval(id);
   }, [phase, eligible.length]);
 
+  const draw = async () => {
+    if (busy) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/admin/raffle", { method: "POST" });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        setError(data?.error || "No se pudo sortear");
+      }
+    } catch {
+      setError("No se pudo sortear");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   if (phase === "idle") {
-    return (
-      <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-[#1b1726]">
-        <span className="w-3 h-3 rounded-full bg-[#B9A7F7] animate-gr-pulse mb-4" />
-        <div className="font-extrabold tracking-[3px] text-white/60" style={{ fontSize: "clamp(13px,1.4vw,18px)" }}>
-          ESPERANDO EL SORTEO
+    if (!revealed) {
+      return (
+        <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-[#1b1726]">
+          <span className="w-3 h-3 rounded-full bg-[#B9A7F7] animate-gr-pulse mb-4" />
+          <div className="font-extrabold tracking-[3px] text-white/60" style={{ fontSize: "clamp(13px,1.4vw,18px)" }}>
+            ESPERANDO LA REVELACIÓN
+          </div>
         </div>
+      );
+    }
+
+    return (
+      <div
+        className="relative min-h-screen w-screen overflow-hidden flex flex-col items-center justify-center text-center px-6"
+        style={{ background: "linear-gradient(160deg,#241c38,#3a2a55 55%,#1b1726)" }}
+      >
+        <AmbientParticles count={16} />
+        <div className="font-extrabold tracking-[3px] text-[#B9A7F7]" style={{ fontSize: "clamp(13px,1.4vw,18px)" }}>
+          🎟️ RIFA ENTRE LOS QUE ACERTARON
+        </div>
+        <p className="text-white/70 font-bold mt-2" style={{ fontSize: "clamp(13px,1.5vw,18px)" }}>
+          {eligible.length} invitado{eligible.length === 1 ? "" : "s"} entran al sorteo
+        </p>
+
+        {eligible.length > 0 ? (
+          <div
+            className="flex flex-wrap items-start justify-center mt-8"
+            style={{ gap: "clamp(14px,1.8vw,22px)", maxWidth: "min(92vw,1100px)", maxHeight: "44vh", overflowY: "auto" }}
+          >
+            {eligible.map((v) => (
+              <div key={v.id} className="flex flex-col items-center animate-gr-fade-in" style={{ gap: 6, width: 76 }}>
+                <Avatar name={v.name} vote={v.vote} photoUrl={v.photoUrl} size={56} glow />
+                <div className="font-bold text-white truncate w-full text-center" style={{ fontSize: "clamp(10px,1vw,13px)" }}>
+                  {v.name}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-white/60 font-bold mt-6" style={{ fontSize: "clamp(13px,1.4vw,16px)" }}>
+            Nadie acertó todavía 🙈
+          </p>
+        )}
+
+        <button
+          onClick={draw}
+          disabled={busy || eligible.length === 0}
+          className="mt-10 border-none rounded-2xl py-4 px-10 font-extrabold cursor-pointer bg-[#B9A7F7] text-white disabled:opacity-40"
+          style={{ fontSize: "clamp(16px,1.8vw,22px)", letterSpacing: 1, boxShadow: "0 14px 30px -10px rgba(185,167,247,.6)" }}
+        >
+          {busy ? "Sorteando…" : "🎉 Rifar"}
+        </button>
+        {error && (
+          <p className="text-[#F7A8C8] font-bold mt-4" style={{ fontSize: "clamp(12px,1.2vw,15px)" }}>
+            {error}
+          </p>
+        )}
       </div>
     );
   }
