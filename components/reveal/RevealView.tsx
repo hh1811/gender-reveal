@@ -4,12 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import type { VotesPayload } from "@/lib/types";
 import { useLiveVotes } from "@/lib/useLiveVotes";
 import { Orb } from "@/components/shared/Orb";
+import { Avatar } from "@/components/shared/Avatar";
 import { Sparkles } from "./Sparkles";
 
 type Phase = "idle" | "dark" | "orb" | "text" | "celebrate" | "settled";
 
 export function RevealView({ initial }: { initial: VotesPayload }) {
-  const { settings } = useLiveVotes(initial);
+  const { votes, settings } = useLiveVotes(initial);
   const reveal = settings.reveal;
   const [phase, setPhase] = useState<Phase>(reveal === "none" ? "idle" : "settled");
   const prevReveal = useRef(reveal);
@@ -82,6 +83,26 @@ export function RevealView({ initial }: { initial: VotesPayload }) {
             </div>
           )}
           {(phase === "celebrate" || phase === "settled") && <Sparkles seed={reveal} />}
+          {phase === "settled" && votes.length > 0 && (
+            <div className="animate-gr-rise" style={{ marginTop: "clamp(20px,3.4vh,40px)", maxWidth: "min(90vw,1200px)" }}>
+              <div
+                className="font-extrabold tracking-[2px] text-white text-center"
+                style={{ fontSize: "clamp(12px,1.3vw,16px)", opacity: 0.85, marginBottom: "clamp(12px,1.6vh,18px)" }}
+              >
+                GRACIAS POR ACOMPAÑARNOS
+              </div>
+              <div className="flex flex-wrap items-start justify-center" style={{ gap: "clamp(10px,1.4vw,18px)", maxHeight: "22vh", overflow: "hidden" }}>
+                {votes.map((v) => (
+                  <div key={v.id} className="flex flex-col items-center" style={{ gap: 4, width: 64 }}>
+                    <Avatar name={v.name} vote={v.vote} photoUrl={v.photoUrl} size={40} />
+                    <div className="font-bold text-white truncate w-full text-center" style={{ fontSize: "clamp(8px,.85vw,11px)", opacity: 0.85 }}>
+                      {v.name}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           {phase === "settled" && (
             <p
               className="absolute font-bold text-white animate-gr-rise"

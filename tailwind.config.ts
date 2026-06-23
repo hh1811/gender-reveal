@@ -40,6 +40,33 @@ const config: Config = {
           "0%, 100%": { transform: "translate(0,0) scale(1)" },
           "50%": { transform: "translate(-1.2%,1%) scale(1.03)" },
         },
+        "gr-slide-down": {
+          "0%": { transform: "translateY(-24px)", opacity: "0" },
+          "15%": { transform: "translateY(0)", opacity: "1" },
+          "85%": { transform: "translateY(0)", opacity: "1" },
+          "100%": { transform: "translateY(-24px)", opacity: "0" },
+        },
+        "gr-orb-breathe": {
+          "0%, 100%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.02)" },
+        },
+        "gr-orb-float-soft": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-8px)" },
+        },
+        "gr-orb-pulse": {
+          "0%": { transform: "scale(1.02)" },
+          "50%": { transform: "scale(1.08)" },
+          "100%": { transform: "scale(1.02)" },
+        },
+        "gr-fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        "gr-particle-drift": {
+          "0%, 100%": { transform: "translate(0,0)", opacity: ".25" },
+          "50%": { transform: "translate(6px,-16px)", opacity: ".6" },
+        },
       },
       animation: {
         "gr-float": "gr-float 4s ease-in-out infinite",
@@ -49,6 +76,12 @@ const config: Config = {
         "gr-confetti": "gr-confetti 1.8s cubic-bezier(.21,.61,.35,1) forwards",
         "gr-sparkle": "gr-sparkle 2.4s ease-out forwards",
         "gr-drift": "gr-drift 18s ease-in-out infinite",
+        "gr-slide-down": "gr-slide-down 3s ease-in-out both",
+        "gr-orb-breathe": "gr-orb-breathe 4s ease-in-out infinite",
+        "gr-orb-float-soft": "gr-orb-float-soft 6s ease-in-out infinite",
+        "gr-orb-pulse": "gr-orb-pulse .4s ease-out",
+        "gr-fade-in": "gr-fade-in .5s ease-out both",
+        "gr-particle-drift": "gr-particle-drift 8s ease-in-out infinite",
       },
     },
   },

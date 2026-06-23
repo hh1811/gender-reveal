@@ -19,3 +19,12 @@ export function relativeTime(iso: string): string {
   if (m < 60) return `hace ${m}m`;
   return `hace ${Math.floor(m / 60)}h`;
 }
+export function relativeTimeSeconds(iso: string): string {
+  const sec = Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 1000));
+  if (sec < 5) return "Justo ahora";
+  if (sec < 60) return `Hace ${sec} segundos`;
+  const m = Math.floor(sec / 60);
+  if (m < 60) return `Hace ${m} minuto${m === 1 ? "" : "s"}`;
+  const h = Math.floor(m / 60);
+  return `Hace ${h} hora${h === 1 ? "" : "s"}`;
+}

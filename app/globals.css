@@ -14,3 +14,12 @@ body {
     radial-gradient(120% 90% at 50% 22%, rgba(255, 255, 255, 0.08) 0%, transparent 70%), #faf6f0;
   color: #4a4458;
 }
+
+@keyframes gr-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
