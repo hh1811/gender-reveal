@@ -60,7 +60,7 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
     const ninaMomentum = momentumFor(votes, "nina");
     const ninoRecent = votes.filter((v) => v.vote === "nino").slice(-5).reverse();
     const ninaRecent = votes.filter((v) => v.vote === "nina").slice(-5).reverse();
-    const recentVoters = votes.slice(-6).reverse();
+    const recentVoters = votes.slice(-4).reverse();
     const messages = votes
       .filter((v) => v.message)
       .slice(-16)
@@ -224,7 +224,7 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
 
       <div className="relative flex-1 flex items-center justify-center" style={{ margin: "clamp(8px,1.2vw,16px) 0" }}>
         {leaderBanner && (
-          <div className="absolute left-1/2 top-0 -translate-x-1/2 flex flex-col items-center animate-gr-slide-down" style={{ zIndex: 6 }}>
+          <div className="absolute inset-x-0 top-0 flex flex-col items-center animate-gr-slide-down" style={{ zIndex: 6 }}>
             <div
               className="font-extrabold tracking-[2px] text-white rounded-full px-8 py-3 whitespace-nowrap"
               style={{
@@ -355,11 +355,11 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
       </div>
 
       <div
-        className="flex"
+        className="flex overflow-hidden"
         style={{
           gap: "clamp(14px,1.6vw,26px)",
           marginTop: "clamp(14px,1.8vw,26px)",
-          height: "clamp(130px,17vh,190px)",
+          height: "clamp(180px,22vh,220px)",
           opacity: revealPrep ? 0.45 : 1,
           transition: "opacity 1.5s ease",
         }}
@@ -408,7 +408,7 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
               </div>
             </div>
           ) : pageMessages.length ? (
-            <div className="flex-1 grid grid-cols-1 gap-2" key={currentPage}>
+            <div className="flex-1 grid grid-cols-1 gap-2 overflow-hidden" key={currentPage}>
               {pageMessages.map((m) => (
                 <div
                   key={m.id}

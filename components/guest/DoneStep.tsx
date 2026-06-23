@@ -9,7 +9,7 @@ export function DoneStep({ vote, photo, onVoteAgain }: { vote: VoteChoice; photo
   const isNino = vote === "nino";
   const orbGradient = isNino ? "linear-gradient(145deg,#bfe4fb,#8ECDF7 70%)" : "linear-gradient(145deg,#fbd3e4,#F7A8C8 70%)";
   const voteGlow = isNino ? "rgba(142,205,247,.6)" : "rgba(247,168,200,.6)";
-  const heading = isNino ? "Bienvenido a Team Niño" : "Bienvenida a Team Niña";
+  const heading = isNino ? "Bienvenid@ a Team Niño" : "Bienvenid@ a Team Niña";
 
   const confetti = useMemo(
     () =>
