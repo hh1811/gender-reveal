@@ -35,6 +35,7 @@ export async function getVotesPayload(): Promise<VotesPayload> {
     raffleWinner: settingsRes.data.raffle_winner_id
       ? { id: settingsRes.data.raffle_winner_id, name: settingsRes.data.raffle_winner_name }
       : null,
+    raffleDrawnAt: settingsRes.data.raffle_drawn_at ?? null,
   };
   return { votes, settings };
 }
@@ -79,6 +80,7 @@ export async function setRaffleWinner(winner: RaffleWinner | null): Promise<void
     .update({
       raffle_winner_id: winner?.id ?? null,
       raffle_winner_name: winner?.name ?? null,
+      raffle_drawn_at: winner ? new Date().toISOString() : null,
       updated_at: new Date().toISOString(),
     })
     .eq("id", 1);
@@ -95,7 +97,13 @@ export async function resetVotes(): Promise<void> {
   if (delErr) throw delErr;
   const { error: revErr } = await sb
     .from("event_settings")
-    .update({ reveal: "none", raffle_winner_id: null, raffle_winner_name: null, updated_at: new Date().toISOString() })
+    .update({
+      reveal: "none",
+      raffle_winner_id: null,
+      raffle_winner_name: null,
+      raffle_drawn_at: null,
+      updated_at: new Date().toISOString(),
+    })
     .eq("id", 1);
   if (revErr) throw revErr;
 }

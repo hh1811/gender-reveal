@@ -131,7 +131,7 @@ export function AdminView({ initial }: { initial: VotesPayload }) {
       <div className="bg-white rounded-[20px] px-6 py-[22px] mb-[22px]" style={{ boxShadow: "0 10px 30px -22px rgba(106,79,201,.5)" }}>
         <div className="font-serif font-bold text-[24px] text-[#3a3349] mb-1">Rifa entre invitados</div>
         <p className="text-[14px] text-[#8a8398] mb-4">
-          Sortea un ganador entre los invitados que acertaron el sexo del bebé.
+          Sortea un ganador entre los invitados que acertaron el sexo del bebé. El resultado se muestra con animación en /raffle.
         </p>
         {settings.reveal === "none" ? (
           <p className="text-[13px] font-bold text-[#a4677f]">Revela el resultado primero para habilitar la rifa.</p>
@@ -158,7 +158,7 @@ export function AdminView({ initial }: { initial: VotesPayload }) {
               disabled={busy || eligibleVoters.length === 0}
               className="border-none rounded-2xl py-[15px] px-6 text-[15px] font-extrabold cursor-pointer bg-[#B9A7F7] text-white disabled:opacity-50"
             >
-              {settings.raffleWinner ? "Volver a sortear" : "Realizar rifa"}
+              {settings.raffleWinner ? "Volver a sortear" : "Sortear"}
             </button>
             {settings.raffleWinner && (
               <div

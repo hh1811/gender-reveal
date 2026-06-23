@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Vote } from "@/lib/types";
 import { Avatar } from "@/components/shared/Avatar";
 
@@ -14,29 +14,41 @@ export function SocialCarousel({ votes }: { votes: Vote[] }) {
     return () => clearInterval(id);
   }, []);
 
-  if (votes.length === 0) return null;
   const items = votes.slice(-24).reverse();
-  const shouldLoop = items.length >= 6;
-  const duration = Math.max(24, items.length * 3.2);
-  const displayItems = shouldLoop ? [...items, ...items] : items;
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    let dir = 1;
+    let raf = 0;
+    function step(target: HTMLDivElement) {
+      const max = target.scrollWidth - target.clientWidth;
+      if (max <= 1) {
+        raf = requestAnimationFrame(() => step(target));
+        return;
+      }
+      target.scrollLeft += 0.5 * dir;
+      if (target.scrollLeft >= max) dir = -1;
+      else if (target.scrollLeft <= 0) dir = 1;
+      raf = requestAnimationFrame(() => step(target));
+    }
+    raf = requestAnimationFrame(() => step(el));
+    return () => cancelAnimationFrame(raf);
+  }, [items.length]);
+
+  if (items.length === 0) return null;
 
   return (
-    <div className="overflow-hidden">
-      <div
-        className={shouldLoop ? "flex items-center" : "flex items-center justify-center"}
-        style={
-          shouldLoop
-            ? { gap: "clamp(18px,2.4vw,40px)", width: "max-content", animation: `gr-marquee ${duration}s linear infinite` }
-            : { gap: "clamp(18px,2.4vw,40px)" }
-        }
-      >
-        {displayItems.map((v, i) => {
+    <div ref={trackRef} className="overflow-x-hidden" style={{ paddingTop: 12 }}>
+      <div className="flex items-center justify-center" style={{ gap: "clamp(18px,2.4vw,40px)", width: "max-content" }}>
+        {items.map((v) => {
           const isNew = now - new Date(v.createdAt).getTime() < NEW_BADGE_MS;
           return (
-            <div key={`${v.id}-${i}`} className="flex flex-col items-center relative" style={{ gap: 4 }}>
+            <div key={v.id} className="flex flex-col items-center relative" style={{ gap: 4 }}>
               {isNew && (
                 <div
-                  className="absolute -top-1 left-1/2 -translate-x-1/2 font-extrabold text-white rounded-full px-2"
+                  className="absolute -top-2 left-1/2 -translate-x-1/2 font-extrabold text-white rounded-full px-2 whitespace-nowrap"
                   style={{ fontSize: 8, letterSpacing: ".5px", background: "#6A4FC9", zIndex: 1 }}
                 >
                   NUEVO

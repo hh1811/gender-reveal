@@ -20,6 +20,7 @@ export interface EventSettings {
   reveal: Reveal;
   parentNames: string;
   raffleWinner: RaffleWinner | null;
+  raffleDrawnAt: string | null;
 }
 
 export interface VotesPayload {

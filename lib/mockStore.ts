@@ -45,6 +45,7 @@ function getState(): MockState {
         reveal: "none",
         parentNames: process.env.NEXT_PUBLIC_PARENT_NAMES || "Héctor y Liz",
         raffleWinner: null,
+        raffleDrawnAt: null,
       },
     };
   }
@@ -68,11 +69,14 @@ export const mockStore = {
     s.votes = [];
     s.settings.reveal = "none";
     s.settings.raffleWinner = null;
+    s.settings.raffleDrawnAt = null;
   },
   setReveal(reveal: EventSettings["reveal"]): void {
     getState().settings.reveal = reveal;
   },
   setRaffleWinner(winner: RaffleWinner | null): void {
-    getState().settings.raffleWinner = winner;
+    const s = getState().settings;
+    s.raffleWinner = winner;
+    s.raffleDrawnAt = winner ? new Date().toISOString() : null;
   },
 };

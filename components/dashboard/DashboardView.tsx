@@ -127,8 +127,7 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
   }, []);
   const revealPrep = revealPrepFrac > 0;
 
-  const stateBanner =
-    settings.reveal !== "none" ? null : total < 10 ? "Sé de los primeros en participar." : revealPrep ? "La revelación está cerca." : null;
+  const stateBanner = settings.reveal !== "none" ? null : revealPrep ? "La revelación está cerca." : null;
 
   const prevTotalForOrb = useRef(total);
   const [orbPulse, setOrbPulse] = useState(false);
@@ -233,9 +232,9 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
         {leaderBanner && (
           <div className="absolute inset-x-0 top-0 flex flex-col items-center animate-gr-slide-down" style={{ zIndex: 6 }}>
             <div
-              className="font-extrabold tracking-[2px] text-white rounded-full px-8 py-3 whitespace-nowrap"
+              className="font-extrabold tracking-[2px] text-white rounded-full px-6 py-2 whitespace-nowrap"
               style={{
-                fontSize: "clamp(36px,2.6vw,44px)",
+                fontSize: "clamp(16px,1.6vw,22px)",
                 background:
                   leaderBanner.type === "tie"
                     ? "linear-gradient(135deg,#b9a7f7,#6A4FC9)"
@@ -310,7 +309,7 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
         </div>
       </div>
 
-      <div className="relative" style={{ marginTop: "clamp(20px,2.6vh,36px)" }}>
+      <div className="relative" style={{ marginTop: "clamp(34px,4.6vh,54px)" }}>
         <div
           className="relative flex-1 rounded-full overflow-hidden flex bg-white"
           style={{
@@ -340,7 +339,7 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
           className="absolute font-extrabold text-[#2C6E8F] animate-gr-pop"
           style={{
             left: `calc(${ninoPct / 2}% - 20px)`,
-            top: "clamp(-28px,-3vh,-22px)",
+            top: "clamp(-22px,-2.4vh,-18px)",
             transition: "left .5s cubic-bezier(.4,0,.2,1)",
             fontSize: "clamp(13px,1.4vw,18px)",
           }}
@@ -352,7 +351,7 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
           className="absolute font-extrabold text-[#B14B7E] animate-gr-pop"
           style={{
             right: `calc(${ninaPct / 2}% - 20px)`,
-            top: "clamp(-28px,-3vh,-22px)",
+            top: "clamp(-22px,-2.4vh,-18px)",
             transition: "right .5s cubic-bezier(.4,0,.2,1)",
             fontSize: "clamp(13px,1.4vw,18px)",
           }}
@@ -486,7 +485,7 @@ function TeamSide({
   color: string;
 }) {
   const isLeft = align === "left";
-  const visibleRecent = recent.slice(0, 5);
+  const visibleRecent = recent.slice(0, 4);
   return (
     <div className={`flex flex-col ${isLeft ? "items-start" : "items-end"}`} style={{ zIndex: 2 }}>
       <div className="font-black tracking-[2px]" style={{ color, fontSize: "clamp(12px,1.3vw,18px)" }}>
