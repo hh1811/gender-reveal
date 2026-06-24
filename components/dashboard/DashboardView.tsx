@@ -5,7 +5,6 @@ import type { Vote, VoteChoice, VotesPayload } from "@/lib/types";
 import { useLiveVotes } from "@/lib/useLiveVotes";
 import { useCountUp } from "@/lib/useCountUp";
 import { useRevealPhase } from "@/lib/useRevealPhase";
-import { relativeTimeSeconds } from "@/lib/voteDisplay";
 import { Orb } from "@/components/shared/Orb";
 import { Halo } from "@/components/shared/Halo";
 import { Avatar } from "@/components/shared/Avatar";
@@ -143,8 +142,6 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
     const id = setInterval(() => setClockTick((t) => t + 1), 1000);
     return () => clearInterval(id);
   }, []);
-  const lastVote = recentVoters[0] || null;
-
   const displayTotal = useCountUp(total, 300);
 
   const [tick, setTick] = useState(0);
@@ -199,16 +196,6 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
           <div className="font-extrabold tracking-[2px] text-[#a99fb6]" style={{ fontSize: "clamp(10px,1vw,14px)" }}>
             PARTICIPANTES
           </div>
-          {lastVote && (
-            <div className="mt-2">
-              <div className="font-extrabold text-[#a99fb6]" style={{ fontSize: "clamp(9px,.9vw,12px)" }}>
-                Último voto: <span className="text-[#3a3349]">{lastVote.name}</span> → {TEAM_LABEL[lastVote.vote]}
-              </div>
-              <div className="font-bold text-[#c4bcd0]" style={{ fontSize: "clamp(8px,.85vw,11px)" }}>
-                {relativeTimeSeconds(lastVote.createdAt)}
-              </div>
-            </div>
-          )}
         </div>
       </header>
 

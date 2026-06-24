@@ -16,7 +16,7 @@ const sans = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Baby Reveal",
+  title: "Bebé Reveal",
   description: "¿Niño o Niña? Vota en vivo",
 };
 
