@@ -45,7 +45,7 @@ export function RegisterStep({
       >
         HÉCTOR &amp; LIZ
       </h1>
-      <p className="text-center text-[14.5px] text-[#766d89] mb-[22px]">Nuestro Baby #3 está en camino.</p>
+      <p className="text-center text-[14.5px] text-[#766d89] mb-[22px]">Nuestro Bebé #3 está en camino.</p>
       <input
         value={name}
         onChange={(e) => onNameChange(e.target.value)}
