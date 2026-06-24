@@ -41,7 +41,17 @@ export function GuestFlow({ initialVotes }: { initialVotes: VotesPayload }) {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
       streamRef.current = stream;
-      if (videoRef.current) videoRef.current.srcObject = stream;
+      const v = videoRef.current;
+      if (v) {
+        v.srcObject = stream;
+        try {
+          await v.play();
+        } catch {
+          // autoplay can be rejected without a user gesture; the visible
+          // "Tomar foto" button click that follows counts as one and lets
+          // the browser retry playback, so don't surface this as an error.
+        }
+      }
     } catch {
       setCameraError(true);
     }
@@ -57,7 +67,11 @@ export function GuestFlow({ initialVotes }: { initialVotes: VotesPayload }) {
 
   const capturePhoto = () => {
     const v = videoRef.current;
-    if (!v || !v.videoWidth) return;
+    if (!v) return;
+    if (!v.videoWidth) {
+      v.play().catch(() => {});
+      return;
+    }
     const size = Math.min(v.videoWidth, v.videoHeight);
     const c = document.createElement("canvas");
     c.width = c.height = 320;
