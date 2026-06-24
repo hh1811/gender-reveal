@@ -16,7 +16,6 @@ import { BABY_LABEL, COUNTDOWN_TARGET_ISO, EVENT_DATE_LABEL } from "@/lib/eventC
 import { topNameSuggestions } from "@/lib/nameSuggestions";
 
 const REVEAL_PREP_MS = 5 * 60 * 1000;
-const VOTE_LABEL: Record<VoteChoice, string> = { nino: "Niño", nina: "Niña" };
 const TEAM_LABEL: Record<VoteChoice, string> = { nino: "TEAM NIÑO", nina: "TEAM NIÑA" };
 
 function displayParentNames(raw: string) {
@@ -42,7 +41,6 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
     ninaPct,
     ninoRecent,
     ninaRecent,
-    recentVoters,
     messages,
     topNino,
     topNina,
@@ -54,13 +52,12 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
     const ninaPct = total ? 100 - ninoPct : 50;
     const ninoRecent = votes.filter((v) => v.vote === "nino").slice(-5).reverse();
     const ninaRecent = votes.filter((v) => v.vote === "nina").slice(-5).reverse();
-    const recentVoters = votes.slice(-4).reverse();
     const messages = votes
       .filter((v) => v.message)
       .slice(-16)
       .reverse();
-    const topNino = topNameSuggestions(votes, "nino");
-    const topNina = topNameSuggestions(votes, "nina");
+    const topNino = topNameSuggestions(votes, "nino", 4);
+    const topNina = topNameSuggestions(votes, "nina", 4);
     return {
       ninoCount,
       ninaCount,
@@ -69,7 +66,6 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
       ninaPct,
       ninoRecent,
       ninaRecent,
-      recentVoters,
       messages,
       topNino,
       topNina,
@@ -338,24 +334,9 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
           transition: "opacity 1.5s ease",
         }}
       >
-        <div className="flex-1 min-w-0 flex flex-col">
-          <div className="font-extrabold tracking-[2px] text-[#a99fb6] mb-2" style={{ fontSize: "clamp(10px,1vw,14px)" }}>
-            ÚLTIMOS EN UNIRSE
-          </div>
-          <div className="flex flex-col gap-2 overflow-hidden">
-            {recentVoters.map((v) => (
-              <div
-                key={v.id}
-                className="bg-white rounded-2xl px-4 py-2 flex items-center gap-3 animate-gr-rise"
-                style={{ boxShadow: "0 8px 20px -16px rgba(106,79,201,.5)", animationDuration: "300ms" }}
-              >
-                <Avatar name={v.name} vote={v.vote} photoUrl={v.photoUrl} size={26} />
-                <span className="font-bold text-[#3a3349]" style={{ fontSize: "clamp(20px,1.4vw,22px)" }}>
-                  {v.name} votó {VOTE_LABEL[v.vote]}
-                </span>
-              </div>
-            ))}
-          </div>
+        <div className="flex-1 min-w-0 flex gap-3">
+          <NameSuggestionColumn label="NOMBRES SUGERIDOS · NIÑO" color="#2C6E8F" items={topNino} />
+          <NameSuggestionColumn label="NOMBRES SUGERIDOS · NIÑA" color="#B14B7E" items={topNina} />
         </div>
         <div className="flex-1 min-w-0 flex flex-col relative">
           <div className="font-extrabold tracking-[2px] text-[#a99fb6] mb-2" style={{ fontSize: "clamp(10px,1vw,14px)" }}>
@@ -412,16 +393,6 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
         </div>
       </div>
 
-      {(topNino.length > 0 || topNina.length > 0) && (
-        <div
-          className="flex justify-center"
-          style={{ gap: "clamp(20px,3vw,48px)", marginTop: "clamp(10px,1.4vw,18px)", opacity: revealPrep ? 0.45 : 1, transition: "opacity 1.5s ease" }}
-        >
-          <NameSuggestions label="NOMBRES SUGERIDOS · NIÑO" color="#2C6E8F" items={topNino} />
-          <NameSuggestions label="NOMBRES SUGERIDOS · NIÑA" color="#B14B7E" items={topNina} />
-        </div>
-      )}
-
       <div style={{ marginTop: "clamp(12px,1.6vw,22px)", opacity: revealPrep ? 0.45 : 1, transition: "opacity 1.5s ease" }}>
         <SocialCarousel votes={votes} />
       </div>
@@ -447,7 +418,7 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
   );
 }
 
-function NameSuggestions({
+function NameSuggestionColumn({
   label,
   color,
   items,
@@ -456,24 +427,33 @@ function NameSuggestions({
   color: string;
   items: { name: string; count: number }[];
 }) {
-  if (items.length === 0) return null;
   return (
-    <div className="bg-white rounded-2xl px-5 py-3" style={{ boxShadow: "0 8px 20px -16px rgba(106,79,201,.5)" }}>
-      <div className="font-extrabold tracking-[1.5px]" style={{ color, opacity: 0.7, fontSize: "clamp(9px,.9vw,11px)" }}>
+    <div className="flex-1 min-w-0 flex flex-col">
+      <div className="font-extrabold tracking-[2px] mb-2" style={{ color, opacity: 0.85, fontSize: "clamp(10px,1vw,14px)" }}>
         {label}
       </div>
-      <div className="flex items-center gap-3 mt-1">
-        {items.map((it) => (
-          <div key={it.name} className="flex items-baseline gap-1">
-            <span className="font-serif font-bold text-[#3a3349]" style={{ fontSize: "clamp(14px,1.5vw,19px)" }}>
-              {it.name}
-            </span>
-            <span className="font-bold" style={{ color, opacity: 0.6, fontSize: "clamp(10px,1vw,13px)" }}>
-              ×{it.count}
-            </span>
-          </div>
-        ))}
-      </div>
+      {items.length === 0 ? (
+        <div className="flex-1 flex items-center justify-center text-[#c4bcd0] font-bold" style={{ fontSize: "clamp(12px,1.2vw,16px)" }}>
+          Aún no hay sugerencias
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2 overflow-hidden">
+          {items.map((it) => (
+            <div
+              key={it.name}
+              className="bg-white rounded-2xl px-4 py-2 flex items-center justify-between gap-3"
+              style={{ boxShadow: "0 8px 20px -16px rgba(106,79,201,.5)" }}
+            >
+              <span className="font-serif font-bold text-[#3a3349]" style={{ fontSize: "clamp(18px,1.5vw,22px)" }}>
+                {it.name}
+              </span>
+              <span className="font-bold" style={{ color, opacity: 0.7, fontSize: "clamp(13px,1.1vw,16px)" }}>
+                ×{it.count}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
