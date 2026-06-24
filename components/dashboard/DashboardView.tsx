@@ -15,18 +15,12 @@ import { SocialCarousel } from "@/components/dashboard/SocialCarousel";
 import { AmbientParticles } from "@/components/dashboard/AmbientParticles";
 import { BABY_LABEL, COUNTDOWN_TARGET_ISO, EVENT_DATE_LABEL } from "@/lib/eventConfig";
 
-const TEN_MIN_MS = 10 * 60 * 1000;
 const REVEAL_PREP_MS = 5 * 60 * 1000;
 const VOTE_LABEL: Record<VoteChoice, string> = { nino: "Niño", nina: "Niña" };
 const TEAM_LABEL: Record<VoteChoice, string> = { nino: "TEAM NIÑO", nina: "TEAM NIÑA" };
 
 function displayParentNames(raw: string) {
   return raw.replace(/\s+y\s+/i, " & ").toUpperCase();
-}
-
-function momentumFor(votes: Vote[], choice: VoteChoice) {
-  const cutoff = Date.now() - TEN_MIN_MS;
-  return votes.filter((v) => v.vote === choice && new Date(v.createdAt).getTime() >= cutoff).length;
 }
 
 type Leader = "nino" | "nina" | "tie";
@@ -46,8 +40,6 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
     total,
     ninoPct,
     ninaPct,
-    ninoMomentum,
-    ninaMomentum,
     ninoRecent,
     ninaRecent,
     recentVoters,
@@ -58,8 +50,6 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
     const total = votes.length;
     const ninoPct = total ? Math.round((ninoCount / total) * 100) : 50;
     const ninaPct = total ? 100 - ninoPct : 50;
-    const ninoMomentum = momentumFor(votes, "nino");
-    const ninaMomentum = momentumFor(votes, "nina");
     const ninoRecent = votes.filter((v) => v.vote === "nino").slice(-5).reverse();
     const ninaRecent = votes.filter((v) => v.vote === "nina").slice(-5).reverse();
     const recentVoters = votes.slice(-4).reverse();
@@ -73,8 +63,6 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
       total,
       ninoPct,
       ninaPct,
-      ninoMomentum,
-      ninaMomentum,
       ninoRecent,
       ninaRecent,
       recentVoters,
@@ -269,14 +257,7 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
         )}
 
         <div className="flex items-center justify-center w-full" style={{ gap: "clamp(20px,4vw,72px)" }}>
-          <TeamSide
-            team="nino"
-            count={ninoCount}
-            momentum={ninoMomentum}
-            recent={ninoRecent}
-            align="right"
-            color="#2C6E8F"
-          />
+          <TeamSide team="nino" count={ninoCount} recent={ninoRecent} align="right" color="#2C6E8F" />
 
           <div className="flex flex-col items-center" style={{ zIndex: 3 }}>
             <div className="relative animate-gr-orb-float-soft">
@@ -298,14 +279,7 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
             </div>
           </div>
 
-          <TeamSide
-            team="nina"
-            count={ninaCount}
-            momentum={ninaMomentum}
-            recent={ninaRecent}
-            align="left"
-            color="#B14B7E"
-          />
+          <TeamSide team="nina" count={ninaCount} recent={ninaRecent} align="left" color="#B14B7E" />
         </div>
       </div>
 
@@ -472,14 +446,12 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
 function TeamSide({
   team,
   count,
-  momentum,
   recent,
   align,
   color,
 }: {
   team: VoteChoice;
   count: number;
-  momentum: number;
   recent: Vote[];
   align: "left" | "right";
   color: string;
@@ -494,14 +466,6 @@ function TeamSide({
       <div className="font-serif font-bold" style={{ color, fontSize: "clamp(120px,15vw,180px)", lineHeight: 0.9 }}>
         {count}
       </div>
-      {momentum > 0 && (
-        <div
-          className="font-bold rounded-full px-3 py-1 mt-2 bg-white/70"
-          style={{ color, fontSize: "clamp(12px,1.3vw,16px)" }}
-        >
-          ▲ +{momentum} votos últimos 10 min
-        </div>
-      )}
       {visibleRecent.length > 0 && (
         <div className="mt-3">
           <div className="font-extrabold tracking-[1px]" style={{ color, opacity: 0.65, fontSize: "clamp(9px,.9vw,11px)" }}>

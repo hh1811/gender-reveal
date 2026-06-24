@@ -15,37 +15,37 @@ export function SocialCarousel({ votes }: { votes: Vote[] }) {
   }, []);
 
   const items = votes.slice(-24).reverse();
-  const trackRef = useRef<HTMLDivElement>(null);
+  const railRef = useRef<HTMLDivElement>(null);
+  const offsetRef = useRef(0);
 
   useEffect(() => {
-    const el = trackRef.current;
+    const el = railRef.current;
     if (!el) return;
-    let dir = 1;
     let raf = 0;
-    function step(target: HTMLDivElement) {
-      const max = target.scrollWidth - target.clientWidth;
-      if (max <= 1) {
-        raf = requestAnimationFrame(() => step(target));
-        return;
+    const step = () => {
+      const half = el.scrollWidth / 2;
+      if (half > 0) {
+        offsetRef.current += 0.5;
+        if (offsetRef.current >= half) offsetRef.current -= half;
+        el.style.transform = `translateX(${-offsetRef.current}px)`;
       }
-      target.scrollLeft += 0.5 * dir;
-      if (target.scrollLeft >= max) dir = -1;
-      else if (target.scrollLeft <= 0) dir = 1;
-      raf = requestAnimationFrame(() => step(target));
-    }
-    raf = requestAnimationFrame(() => step(el));
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
   }, [items.length]);
 
   if (items.length === 0) return null;
 
+  const loop = [...items, ...items];
+
   return (
-    <div ref={trackRef} className="overflow-x-hidden" style={{ paddingTop: 18 }}>
-      <div className="flex items-center justify-center" style={{ gap: "clamp(27px,3.6vw,60px)", width: "max-content" }}>
-        {items.map((v) => {
+    <div className="overflow-x-hidden" style={{ paddingTop: 18 }}>
+      <div ref={railRef} className="flex items-center" style={{ gap: "clamp(27px,3.6vw,60px)", width: "max-content" }}>
+        {loop.map((v, i) => {
           const isNew = now - new Date(v.createdAt).getTime() < NEW_BADGE_MS;
           return (
-            <div key={v.id} className="flex flex-col items-center relative" style={{ gap: 6 }}>
+            <div key={`${v.id}-${i}`} className="flex flex-col items-center relative" style={{ gap: 6 }}>
               {isNew && (
                 <div
                   className="absolute -top-3 left-1/2 -translate-x-1/2 font-extrabold text-white rounded-full px-3 whitespace-nowrap"
