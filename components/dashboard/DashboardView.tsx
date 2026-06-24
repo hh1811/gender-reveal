@@ -273,11 +273,11 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
         </div>
       </div>
 
-      <div className="relative" style={{ marginTop: "clamp(34px,4.6vh,54px)" }}>
+      <div className="relative" style={{ marginTop: "clamp(40px,5.4vh,62px)" }}>
         <div
           className="relative flex-1 rounded-full overflow-hidden flex bg-white"
           style={{
-            height: "clamp(18px,2.2vw,24px)",
+            height: "clamp(26px,3.2vw,34px)",
             boxShadow: "0 0 22px 5px rgba(106,79,201,.14), inset 0 1px 3px rgba(0,0,0,.05)",
           }}
         >
@@ -302,10 +302,10 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
           key={`nino-${ninoPct}`}
           className="absolute font-extrabold text-[#2C6E8F] animate-gr-pop"
           style={{
-            left: `calc(${ninoPct / 2}% - 20px)`,
-            top: "clamp(-22px,-2.4vh,-18px)",
+            left: `calc(${ninoPct / 2}% - 26px)`,
+            top: "clamp(-30px,-3.2vh,-24px)",
             transition: "left .5s cubic-bezier(.4,0,.2,1)",
-            fontSize: "clamp(13px,1.4vw,18px)",
+            fontSize: "clamp(18px,2vw,26px)",
           }}
         >
           {ninoPct}%
@@ -314,10 +314,10 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
           key={`nina-${ninaPct}`}
           className="absolute font-extrabold text-[#B14B7E] animate-gr-pop"
           style={{
-            right: `calc(${ninaPct / 2}% - 20px)`,
-            top: "clamp(-22px,-2.4vh,-18px)",
+            right: `calc(${ninaPct / 2}% - 26px)`,
+            top: "clamp(-30px,-3.2vh,-24px)",
             transition: "right .5s cubic-bezier(.4,0,.2,1)",
-            fontSize: "clamp(13px,1.4vw,18px)",
+            fontSize: "clamp(18px,2vw,26px)",
           }}
         >
           {ninaPct}%
@@ -498,39 +498,14 @@ function TeamSide({
   color: string;
 }) {
   const isLeft = align === "left";
-  const visibleRecent = recent.slice(0, 4);
   return (
     <div className={`flex flex-col ${isLeft ? "items-start" : "items-end"}`} style={{ zIndex: 2 }}>
-      <div className="font-black tracking-[2px]" style={{ color, fontSize: "clamp(12px,1.3vw,18px)" }}>
+      <div className="font-black tracking-[2px]" style={{ color, fontSize: "clamp(13px,1.5vw,20px)" }}>
         {TEAM_LABEL[team]}
       </div>
-      <div className="font-serif font-bold" style={{ color, fontSize: "clamp(120px,15vw,180px)", lineHeight: 0.9 }}>
+      <div className="font-serif font-bold" style={{ color, fontSize: "clamp(140px,18vw,220px)", lineHeight: 0.9 }}>
         {count}
       </div>
-      {visibleRecent.length > 0 && (
-        <div className="mt-3">
-          <div className="font-extrabold tracking-[1px]" style={{ color, opacity: 0.65, fontSize: "clamp(9px,.9vw,11px)" }}>
-            Participantes recientes
-          </div>
-          <div className={`flex mt-1 ${isLeft ? "flex-row" : "flex-row-reverse"}`} style={{ gap: 10 }}>
-            {visibleRecent.map((v, i) => (
-              <div
-                key={v.id}
-                className="flex flex-col items-center animate-gr-fade-in"
-                style={{ gap: 3, animationDelay: `${i * 0.12}s` }}
-              >
-                <Avatar name={v.name} vote={v.vote} photoUrl={v.photoUrl} size={30} />
-                <div
-                  className="font-bold truncate"
-                  style={{ color, opacity: 0.75, fontSize: "clamp(8px,.85vw,10px)", maxWidth: 56 }}
-                >
-                  {v.name}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
