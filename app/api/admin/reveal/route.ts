@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { setReveal } from "@/lib/store";
+import { setReveal, setRaffleWinner } from "@/lib/store";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -8,5 +8,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "invalid reveal" }, { status: 400 });
   }
   await setReveal(reveal);
+  await setRaffleWinner(null);
   return NextResponse.json({ ok: true });
 }

@@ -11,11 +11,13 @@ export function RaffleScreen({
   phase,
   eligible,
   winner,
+  winnerVote,
   revealed,
 }: {
   phase: RafflePhase;
   eligible: Vote[];
   winner: RaffleWinner | null;
+  winnerVote: Vote | null;
   revealed: boolean;
 }) {
   const [spinIndex, setSpinIndex] = useState(0);
@@ -142,14 +144,24 @@ export function RaffleScreen({
           <div className="font-extrabold tracking-[3px] text-[#B9A7F7]" style={{ fontSize: "clamp(13px,1.4vw,18px)" }}>
             🎉 TENEMOS GANADOR 🎉
           </div>
+          {winnerVote && (
+            <Avatar
+              name={winnerVote.name}
+              vote={winnerVote.vote}
+              photoUrl={winnerVote.photoUrl}
+              size={160}
+              glow
+              className="mt-5"
+            />
+          )}
           <div
             className="font-serif font-bold text-white mt-3"
             style={{ fontSize: "clamp(48px,7vw,96px)", textShadow: "0 16px 50px rgba(0,0,0,.4)" }}
           >
             {winner.name}
           </div>
-          <p className="text-white/80 font-bold mt-4" style={{ fontSize: "clamp(15px,1.8vw,22px)" }}>
-            ¡Felicidades! Acertaste el sexo del bebé.
+          <p className="text-white/80 font-bold mt-4" style={{ fontSize: "clamp(22px,2.6vw,32px)" }}>
+            ¡Felicidades!
           </p>
         </div>
       )}

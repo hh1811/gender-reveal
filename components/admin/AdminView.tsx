@@ -40,11 +40,6 @@ export function AdminView({ initial }: { initial: VotesPayload }) {
     return { ninoCount, ninaCount, total, messageCount, voters };
   }, [votes]);
 
-  const eligibleVoters = useMemo(
-    () => (settings.reveal === "none" ? [] : votes.filter((v) => v.vote === settings.reveal)),
-    [votes, settings.reveal]
-  );
-
   const run = async (fn: () => Promise<void>) => {
     if (busy) return;
     setBusy(true);
@@ -59,10 +54,6 @@ export function AdminView({ initial }: { initial: VotesPayload }) {
   const revealNina = () => run(() => postJson("/api/admin/reveal", { reveal: "nina" }));
   const hideReveal = () => run(() => postJson("/api/admin/reveal", { reveal: "none" }));
   const simulateVote = () => run(() => postJson("/api/admin/simulate"));
-  const doRaffle = () => {
-    if (settings.raffleWinner && !window.confirm("Ya hay un ganador. ¿Quieres volver a sortear?")) return;
-    run(() => postJson("/api/admin/raffle"));
-  };
   const resetAll = () => {
     if (!window.confirm("¿Reiniciar toda la votación? Esto borra todos los votos.")) return;
     run(() => postJson("/api/admin/reset"));
@@ -126,50 +117,6 @@ export function AdminView({ initial }: { initial: VotesPayload }) {
           <div className="mt-3 text-[12px] font-bold text-[#a99fb6]">
             Revelación activa: {settings.reveal === "nino" ? "NIÑO" : "NIÑA"}
           </div>
-        )}
-      </div>
-
-      <div className="bg-white rounded-[20px] px-6 py-[22px] mb-[22px]" style={{ boxShadow: "0 10px 30px -22px rgba(106,79,201,.5)" }}>
-        <div className="font-serif font-bold text-[24px] text-[#3a3349] mb-1">Rifa entre invitados</div>
-        <p className="text-[14px] text-[#8a8398] mb-4">
-          Sortea un ganador entre los invitados que acertaron el sexo del bebé. El resultado se muestra con animación en /raffle.
-        </p>
-        {settings.reveal === "none" ? (
-          <p className="text-[13px] font-bold text-[#a4677f]">Revela el resultado primero para habilitar la rifa.</p>
-        ) : (
-          <>
-            <div className="text-[13px] font-bold text-[#a99fb6] mb-3">
-              {eligibleVoters.length} invitado{eligibleVoters.length === 1 ? "" : "s"} acertó {settings.reveal === "nino" ? "NIÑO" : "NIÑA"}
-            </div>
-            {eligibleVoters.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-4">
-                {eligibleVoters.map((v) => (
-                  <span
-                    key={v.id}
-                    className="text-[12px] font-bold px-3 py-1 rounded-full"
-                    style={{ color: colorFor(v.vote), background: softFor(v.vote) }}
-                  >
-                    {v.name}
-                  </span>
-                ))}
-              </div>
-            )}
-            <button
-              onClick={doRaffle}
-              disabled={busy || eligibleVoters.length === 0}
-              className="border-none rounded-2xl py-[15px] px-6 text-[15px] font-extrabold cursor-pointer bg-[#B9A7F7] text-white disabled:opacity-50"
-            >
-              {settings.raffleWinner ? "Volver a sortear" : "Sortear"}
-            </button>
-            {settings.raffleWinner && (
-              <div
-                className="mt-4 rounded-2xl px-5 py-4 font-serif font-bold text-[20px] text-[#3a3349]"
-                style={{ background: "linear-gradient(135deg,#f3eaff,#ffeaf3)" }}
-              >
-                🎉 Ganador: {settings.raffleWinner.name}
-              </div>
-            )}
-          </>
         )}
       </div>
 

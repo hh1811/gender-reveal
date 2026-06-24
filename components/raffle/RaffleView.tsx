@@ -10,6 +10,7 @@ export function RaffleView({ initial }: { initial: VotesPayload }) {
   const phase = useRafflePhase(settings.raffleDrawnAt);
   const revealed = settings.reveal !== "none";
   const eligible = revealed ? votes.filter((v) => v.vote === settings.reveal) : [];
+  const winnerVote = settings.raffleWinner ? votes.find((v) => v.id === settings.raffleWinner!.id) || null : null;
 
-  return <RaffleScreen phase={phase} eligible={eligible} winner={settings.raffleWinner} revealed={revealed} />;
+  return <RaffleScreen phase={phase} eligible={eligible} winner={settings.raffleWinner} winnerVote={winnerVote} revealed={revealed} />;
 }

@@ -40,25 +40,25 @@ export function SocialCarousel({ votes }: { votes: Vote[] }) {
   if (items.length === 0) return null;
 
   return (
-    <div ref={trackRef} className="overflow-x-hidden" style={{ paddingTop: 12 }}>
-      <div className="flex items-center justify-center" style={{ gap: "clamp(18px,2.4vw,40px)", width: "max-content" }}>
+    <div ref={trackRef} className="overflow-x-hidden" style={{ paddingTop: 18 }}>
+      <div className="flex items-center justify-center" style={{ gap: "clamp(27px,3.6vw,60px)", width: "max-content" }}>
         {items.map((v) => {
           const isNew = now - new Date(v.createdAt).getTime() < NEW_BADGE_MS;
           return (
-            <div key={v.id} className="flex flex-col items-center relative" style={{ gap: 4 }}>
+            <div key={v.id} className="flex flex-col items-center relative" style={{ gap: 6 }}>
               {isNew && (
                 <div
-                  className="absolute -top-2 left-1/2 -translate-x-1/2 font-extrabold text-white rounded-full px-2 whitespace-nowrap"
-                  style={{ fontSize: 8, letterSpacing: ".5px", background: "#6A4FC9", zIndex: 1 }}
+                  className="absolute -top-3 left-1/2 -translate-x-1/2 font-extrabold text-white rounded-full px-3 whitespace-nowrap"
+                  style={{ fontSize: 12, letterSpacing: ".5px", background: "#6A4FC9", zIndex: 1 }}
                 >
                   NUEVO
                 </div>
               )}
-              <Avatar name={v.name} vote={v.vote} photoUrl={v.photoUrl} size={40} glow />
-              <div className="font-extrabold text-[#3a3349] truncate" style={{ fontSize: "clamp(9px,.9vw,12px)", maxWidth: 76 }}>
+              <Avatar name={v.name} vote={v.vote} photoUrl={v.photoUrl} size={60} glow />
+              <div className="font-extrabold text-[#3a3349] truncate" style={{ fontSize: "clamp(13px,1.35vw,18px)", maxWidth: 114 }}>
                 {v.name}
               </div>
-              <div className="font-bold text-[#a99fb6]" style={{ fontSize: "clamp(8px,.8vw,10px)" }}>
+              <div className="font-bold text-[#a99fb6]" style={{ fontSize: "clamp(12px,1.2vw,15px)" }}>
                 {VOTE_LABEL[v.vote]}
               </div>
             </div>
