@@ -163,6 +163,19 @@ export function RaffleScreen({
           <p className="text-white/80 font-bold mt-4" style={{ fontSize: "clamp(22px,2.6vw,32px)" }}>
             ¡Felicidades!
           </p>
+          <button
+            onClick={draw}
+            disabled={busy || eligible.length === 0}
+            className="mt-8 border-none rounded-2xl py-3 px-8 font-extrabold cursor-pointer bg-[#B9A7F7] text-white disabled:opacity-40"
+            style={{ fontSize: "clamp(14px,1.5vw,18px)", letterSpacing: 1, boxShadow: "0 14px 30px -10px rgba(185,167,247,.6)" }}
+          >
+            {busy ? "Sorteando…" : "🎲 Sortear de nuevo"}
+          </button>
+          {error && (
+            <p className="text-[#F7A8C8] font-bold mt-4" style={{ fontSize: "clamp(12px,1.2vw,15px)" }}>
+              {error}
+            </p>
+          )}
         </div>
       )}
     </div>
