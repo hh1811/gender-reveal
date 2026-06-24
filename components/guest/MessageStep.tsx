@@ -1,5 +1,7 @@
 "use client";
 
+import { BackButton } from "./BackButton";
+
 export function MessageStep({
   message,
   onMessageChange,
@@ -13,6 +15,7 @@ export function MessageStep({
 }) {
   return (
     <div className="my-auto">
+      <BackButton onClick={onBack} />
       <div className="text-[12px] font-extrabold tracking-[2px] text-[#B9A7F7] text-center">CASI LISTO</div>
       <h1 className="font-serif font-bold text-[34px] leading-[1.08] mt-2 mb-1 text-center text-[#3a3349]">
         Un mensaje para los papás
@@ -30,9 +33,6 @@ export function MessageStep({
         className="w-full mt-[18px] border-none rounded-2xl py-4 text-[16px] font-extrabold text-white cursor-pointer bg-[#6A4FC9]"
       >
         Enviar mi voto
-      </button>
-      <button onClick={onBack} className="w-full bg-transparent border-none text-[#a99fb6] text-[14px] font-bold py-[14px] cursor-pointer">
-        Cambiar mi voto
       </button>
     </div>
   );

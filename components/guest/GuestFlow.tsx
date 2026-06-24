@@ -115,6 +115,11 @@ export function GuestFlow({ initialVotes }: { initialVotes: VotesPayload }) {
     if (selectedVote) setStep("message");
   };
 
+  const backToRegister = () => setStep("register");
+  const backToVote = () => setStep("vote");
+  const backToNames = () => setStep("names");
+  const backToPhoto = () => setStep("photo");
+
   const submitVote = async () => {
     if (!selectedVote || submitting) return;
     setSubmitting(true);
@@ -160,6 +165,7 @@ export function GuestFlow({ initialVotes }: { initialVotes: VotesPayload }) {
             ninaCount={ninaCount}
             onSelect={setSelectedVote}
             onContinue={goNames}
+            onBack={backToRegister}
           />
         )}
         {step === "names" && (
@@ -169,6 +175,7 @@ export function GuestFlow({ initialVotes }: { initialVotes: VotesPayload }) {
             onNameNinoChange={setNameNino}
             onNameNinaChange={setNameNina}
             onContinue={goPhoto}
+            onBack={backToVote}
           />
         )}
         {step === "photo" && (
@@ -181,6 +188,7 @@ export function GuestFlow({ initialVotes }: { initialVotes: VotesPayload }) {
             onFile={onFile}
             onUsePhoto={goMessage}
             onSkip={goMessage}
+            onBack={backToNames}
           />
         )}
         {step === "message" && (
@@ -188,7 +196,7 @@ export function GuestFlow({ initialVotes }: { initialVotes: VotesPayload }) {
             message={message}
             onMessageChange={setMessage}
             onSubmit={submitVote}
-            onBack={() => setStep("vote")}
+            onBack={backToPhoto}
           />
         )}
         {step === "done" && selectedVote && (

@@ -1,6 +1,7 @@
 "use client";
 
 import { RefObject } from "react";
+import { BackButton } from "./BackButton";
 
 export function PhotoStep({
   photo,
@@ -11,6 +12,7 @@ export function PhotoStep({
   onFile,
   onUsePhoto,
   onSkip,
+  onBack,
 }: {
   photo: string | null;
   cameraError: boolean;
@@ -20,6 +22,7 @@ export function PhotoStep({
   onFile: (file: File) => void;
   onUsePhoto: () => void;
   onSkip: () => void;
+  onBack: () => void;
 }) {
   const hasPhoto = !!photo;
   const noPhoto = !photo && !cameraError;
@@ -27,6 +30,7 @@ export function PhotoStep({
 
   return (
     <div className="my-auto text-center">
+      <BackButton onClick={onBack} />
       <div className="text-[12px] font-extrabold tracking-[2px] text-[#B9A7F7]">UNA FOTO DEL MOMENTO</div>
       <h1 className="font-serif font-bold text-[38px] leading-[1.05] mt-2 mb-1 text-[#3a3349]">¡Sonríe!</h1>
       <p className="text-[15px] text-[#766d89] mb-[18px]">Tu foto aparecerá junto a tu voto.</p>

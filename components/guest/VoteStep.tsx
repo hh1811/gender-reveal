@@ -1,6 +1,7 @@
 "use client";
 
 import type { VoteChoice } from "@/lib/types";
+import { BackButton } from "./BackButton";
 
 export function VoteStep({
   selectedVote,
@@ -8,18 +9,21 @@ export function VoteStep({
   ninaCount,
   onSelect,
   onContinue,
+  onBack,
 }: {
   selectedVote: VoteChoice | null;
   ninoCount: number;
   ninaCount: number;
   onSelect: (v: VoteChoice) => void;
   onContinue: () => void;
+  onBack: () => void;
 }) {
   const ctaLabel =
     selectedVote === "nino" ? "Unirme a Team Niño" : selectedVote === "nina" ? "Unirme a Team Niña" : "Continuar";
 
   return (
     <div className="my-auto">
+      <BackButton onClick={onBack} />
       <h1 className="font-serif font-bold text-[38px] leading-[1.05] mt-2 mb-1 text-center text-[#3a3349]">
         ¿Qué crees que será?
       </h1>

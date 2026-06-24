@@ -1,20 +1,25 @@
 "use client";
 
+import { BackButton } from "./BackButton";
+
 export function NamesStep({
   nameNino,
   nameNina,
   onNameNinoChange,
   onNameNinaChange,
   onContinue,
+  onBack,
 }: {
   nameNino: string;
   nameNina: string;
   onNameNinoChange: (v: string) => void;
   onNameNinaChange: (v: string) => void;
   onContinue: () => void;
+  onBack: () => void;
 }) {
   return (
     <div className="my-auto">
+      <BackButton onClick={onBack} />
       <div className="text-[12px] font-extrabold tracking-[2px] text-[#B9A7F7] text-center">UNA IDEA MÁS</div>
       <h1 className="font-serif font-bold text-[34px] leading-[1.08] mt-2 mb-1 text-center text-[#3a3349]">
         ¿Qué nombre le pondrías?
