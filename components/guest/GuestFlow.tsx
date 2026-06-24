@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { VoteChoice, VotesPayload } from "@/lib/types";
-import { useLiveVotes } from "@/lib/useLiveVotes";
 import { RegisterStep } from "./RegisterStep";
 import { VoteStep } from "./VoteStep";
 import { NamesStep } from "./NamesStep";
@@ -12,15 +11,7 @@ import { DoneStep } from "./DoneStep";
 
 type Step = "register" | "vote" | "names" | "photo" | "message" | "done";
 
-export function GuestFlow({ initialVotes }: { initialVotes: VotesPayload }) {
-  const { votes } = useLiveVotes(initialVotes);
-  const { ninoCount, ninaCount } = useMemo(
-    () => ({
-      ninoCount: votes.filter((v) => v.vote === "nino").length,
-      ninaCount: votes.filter((v) => v.vote === "nina").length,
-    }),
-    [votes],
-  );
+export function GuestFlow({}: { initialVotes: VotesPayload }) {
   const [step, setStep] = useState<Step>("register");
   const [name, setName] = useState("");
   const [selectedVote, setSelectedVote] = useState<VoteChoice | null>(null);
@@ -161,8 +152,6 @@ export function GuestFlow({ initialVotes }: { initialVotes: VotesPayload }) {
         {step === "vote" && (
           <VoteStep
             selectedVote={selectedVote}
-            ninoCount={ninoCount}
-            ninaCount={ninaCount}
             onSelect={setSelectedVote}
             onContinue={goNames}
             onBack={backToRegister}

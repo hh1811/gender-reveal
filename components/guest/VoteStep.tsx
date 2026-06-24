@@ -5,15 +5,11 @@ import { BackButton } from "./BackButton";
 
 export function VoteStep({
   selectedVote,
-  ninoCount,
-  ninaCount,
   onSelect,
   onContinue,
   onBack,
 }: {
   selectedVote: VoteChoice | null;
-  ninoCount: number;
-  ninaCount: number;
   onSelect: (v: VoteChoice) => void;
   onContinue: () => void;
   onBack: () => void;
@@ -39,7 +35,6 @@ export function VoteStep({
           tint="#f1faff"
           borderColor="#8ECDF7"
           glow="rgba(142,205,247,.7)"
-          voterCount={ninoCount}
           onClick={() => onSelect("nino")}
         />
         <VoteCard
@@ -50,7 +45,6 @@ export function VoteStep({
           tint="#fff1f7"
           borderColor="#F7A8C8"
           glow="rgba(247,168,200,.7)"
-          voterCount={ninaCount}
           onClick={() => onSelect("nina")}
         />
       </div>
@@ -80,7 +74,6 @@ function VoteCard({
   tint,
   borderColor,
   glow,
-  voterCount,
   onClick,
 }: {
   label: string;
@@ -90,7 +83,6 @@ function VoteCard({
   tint: string;
   borderColor: string;
   glow: string;
-  voterCount: number;
   onClick: () => void;
 }) {
   return (
@@ -117,11 +109,6 @@ function VoteCard({
         {label}
       </div>
       <div className="text-[12.5px] text-[#9a93ab] mt-[3px]">Únete a la predicción</div>
-      {voterCount > 0 && (
-        <div className="text-[11px] text-[#b3a9c4] mt-[6px]">
-          {voterCount} {voterCount === 1 ? "persona eligió" : "personas eligieron"} este equipo
-        </div>
-      )}
     </div>
   );
 }
