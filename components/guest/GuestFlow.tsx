@@ -5,11 +5,12 @@ import type { VoteChoice, VotesPayload } from "@/lib/types";
 import { useLiveVotes } from "@/lib/useLiveVotes";
 import { RegisterStep } from "./RegisterStep";
 import { VoteStep } from "./VoteStep";
+import { NamesStep } from "./NamesStep";
 import { PhotoStep } from "./PhotoStep";
 import { MessageStep } from "./MessageStep";
 import { DoneStep } from "./DoneStep";
 
-type Step = "register" | "vote" | "photo" | "message" | "done";
+type Step = "register" | "vote" | "names" | "photo" | "message" | "done";
 
 export function GuestFlow({ initialVotes }: { initialVotes: VotesPayload }) {
   const { votes } = useLiveVotes(initialVotes);
@@ -24,6 +25,8 @@ export function GuestFlow({ initialVotes }: { initialVotes: VotesPayload }) {
   const [name, setName] = useState("");
   const [selectedVote, setSelectedVote] = useState<VoteChoice | null>(null);
   const [message, setMessage] = useState("");
+  const [nameNino, setNameNino] = useState("");
+  const [nameNina, setNameNina] = useState("");
   const [photo, setPhoto] = useState<string | null>(null);
   const [cameraError, setCameraError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -102,6 +105,9 @@ export function GuestFlow({ initialVotes }: { initialVotes: VotesPayload }) {
   const goVote = () => {
     if (name.trim()) setStep("vote");
   };
+  const goNames = () => {
+    if (selectedVote) setStep("names");
+  };
   const goPhoto = () => {
     if (selectedVote) setStep("photo");
   };
@@ -120,6 +126,8 @@ export function GuestFlow({ initialVotes }: { initialVotes: VotesPayload }) {
           name: name.trim() || "Invitado",
           vote: selectedVote,
           message: message.trim(),
+          nameNino: nameNino.trim(),
+          nameNina: nameNina.trim(),
           photo,
         }),
       });
@@ -135,6 +143,8 @@ export function GuestFlow({ initialVotes }: { initialVotes: VotesPayload }) {
     setName("");
     setSelectedVote(null);
     setMessage("");
+    setNameNino("");
+    setNameNina("");
     setPhoto(null);
     setCameraError(false);
   };
@@ -149,6 +159,15 @@ export function GuestFlow({ initialVotes }: { initialVotes: VotesPayload }) {
             ninoCount={ninoCount}
             ninaCount={ninaCount}
             onSelect={setSelectedVote}
+            onContinue={goNames}
+          />
+        )}
+        {step === "names" && (
+          <NamesStep
+            nameNino={nameNino}
+            nameNina={nameNina}
+            onNameNinoChange={setNameNino}
+            onNameNinaChange={setNameNina}
             onContinue={goPhoto}
           />
         )}

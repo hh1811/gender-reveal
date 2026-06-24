@@ -23,6 +23,23 @@ const seed: Array<[string, "nino" | "nina", string, number]> = [
   ["Jorge", "nino", "", 1],
 ];
 
+const NAME_SUGGESTIONS: Array<[string | null, string | null]> = [
+  [null, "Valentina"],
+  ["Mateo", null],
+  [null, "Valentina"],
+  ["Mateo", null],
+  [null, "Emilia"],
+  ["Santiago", null],
+  [null, null],
+  ["Mateo", null],
+  [null, "Emilia"],
+  ["Leonardo", null],
+  [null, "Valentina"],
+  ["Mateo", null],
+  [null, "Emilia"],
+  [null, null],
+];
+
 function buildSeed(): Vote[] {
   const now = Date.now();
   return seed.map(([name, vote, message, minsAgo], i) => ({
@@ -30,6 +47,8 @@ function buildSeed(): Vote[] {
     name,
     vote,
     message: message || null,
+    nameNino: NAME_SUGGESTIONS[i]?.[0] ?? null,
+    nameNina: NAME_SUGGESTIONS[i]?.[1] ?? null,
     photoUrl: null,
     createdAt: new Date(now - minsAgo * 60_000).toISOString(),
   }));

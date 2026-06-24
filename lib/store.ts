@@ -9,12 +9,23 @@ type VoteRow = {
   name: string;
   vote: "nino" | "nina";
   message: string | null;
+  name_suggestion_nino: string | null;
+  name_suggestion_nina: string | null;
   photo_url: string | null;
   created_at: string;
 };
 
 function rowToVote(r: VoteRow): Vote {
-  return { id: r.id, name: r.name, vote: r.vote, message: r.message, photoUrl: r.photo_url, createdAt: r.created_at };
+  return {
+    id: r.id,
+    name: r.name,
+    vote: r.vote,
+    message: r.message,
+    nameNino: r.name_suggestion_nino,
+    nameNina: r.name_suggestion_nina,
+    photoUrl: r.photo_url,
+    createdAt: r.created_at,
+  };
 }
 
 export async function getVotesPayload(): Promise<VotesPayload> {
@@ -44,6 +55,8 @@ export async function insertVote(input: {
   name: string;
   vote: "nino" | "nina";
   message: string | null;
+  nameNino: string | null;
+  nameNina: string | null;
   photoUrl: string | null;
 }): Promise<Vote> {
   if (!isSupabaseConfigured) {
@@ -52,7 +65,14 @@ export async function insertVote(input: {
   const sb = getSupabaseAdmin()!;
   const { data, error } = await sb
     .from("votes")
-    .insert({ name: input.name, vote: input.vote, message: input.message, photo_url: input.photoUrl })
+    .insert({
+      name: input.name,
+      vote: input.vote,
+      message: input.message,
+      name_suggestion_nino: input.nameNino,
+      name_suggestion_nina: input.nameNina,
+      photo_url: input.photoUrl,
+    })
     .select("*")
     .single();
   if (error) throw error;

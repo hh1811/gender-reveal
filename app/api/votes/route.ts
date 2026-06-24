@@ -14,6 +14,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "vote is required" }, { status: 400 });
   }
   const message = typeof body.message === "string" && body.message.trim() ? body.message.trim() : null;
+  const nameNino = typeof body.nameNino === "string" && body.nameNino.trim() ? body.nameNino.trim() : null;
+  const nameNina = typeof body.nameNina === "string" && body.nameNina.trim() ? body.nameNina.trim() : null;
   const photoDataUrl = typeof body.photo === "string" && body.photo ? body.photo : null;
 
   let photoUrl: string | null = null;
@@ -25,6 +27,6 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const created = await insertVote({ name, vote, message, photoUrl });
+  const created = await insertVote({ name, vote, message, nameNino, nameNina, photoUrl });
   return NextResponse.json({ vote: created });
 }

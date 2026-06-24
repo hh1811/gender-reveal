@@ -7,6 +7,8 @@ export interface Vote {
   name: string;
   vote: VoteChoice;
   message: string | null;
+  nameNino: string | null;
+  nameNina: string | null;
   photoUrl: string | null;
   createdAt: string;
 }

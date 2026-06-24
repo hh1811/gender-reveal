@@ -18,6 +18,6 @@ export async function POST() {
   const name = simNames[Math.floor(Math.random() * simNames.length)];
   const vote = Math.random() < 0.5 ? "nino" : "nina";
   const message = simMsgs[Math.floor(Math.random() * simMsgs.length)] || null;
-  const created = await insertVote({ name, vote, message, photoUrl: null });
+  const created = await insertVote({ name, vote, message, nameNino: null, nameNina: null, photoUrl: null });
   return NextResponse.json({ vote: created });
 }

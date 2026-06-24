@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import type { VotesPayload } from "@/lib/types";
 import { useLiveVotes } from "@/lib/useLiveVotes";
 import { colorFor, relativeTime, softFor } from "@/lib/voteDisplay";
+import { topNameSuggestions } from "@/lib/nameSuggestions";
 import { Avatar } from "@/components/shared/Avatar";
 
 async function postJson(url: string, body?: unknown) {
@@ -18,7 +19,9 @@ export function AdminView({ initial }: { initial: VotesPayload }) {
   const { votes, settings } = useLiveVotes(initial);
   const [busy, setBusy] = useState(false);
 
-  const { ninoCount, ninaCount, total, messageCount, voters } = useMemo(() => {
+  const [activeVoterId, setActiveVoterId] = useState<string | null>(null);
+
+  const { ninoCount, ninaCount, total, messageCount, voters, topNino, topNina } = useMemo(() => {
     const ninoCount = votes.filter((v) => v.vote === "nino").length;
     const ninaCount = votes.filter((v) => v.vote === "nina").length;
     const total = votes.length;
@@ -34,11 +37,18 @@ export function AdminView({ initial }: { initial: VotesPayload }) {
         color: colorFor(v.vote),
         soft: softFor(v.vote),
         photoUrl: v.photoUrl,
-        message: v.message || "—",
+        message: v.message,
+        messagePreview: v.message || "—",
+        nameNino: v.nameNino,
+        nameNina: v.nameNina,
         timeLabel: relativeTime(v.createdAt),
       }));
-    return { ninoCount, ninaCount, total, messageCount, voters };
+    const topNino = topNameSuggestions(votes, "nino", 5);
+    const topNina = topNameSuggestions(votes, "nina", 5);
+    return { ninoCount, ninaCount, total, messageCount, voters, topNino, topNina };
   }, [votes]);
+
+  const activeVoter = voters.find((v) => v.id === activeVoterId) || null;
 
   const run = async (fn: () => Promise<void>) => {
     if (busy) return;
@@ -70,6 +80,13 @@ export function AdminView({ initial }: { initial: VotesPayload }) {
         <StatCard label="NIÑA" labelColor="#B14B7E" value={ninaCount} color="#B14B7E" border="#F7A8C8" />
         <StatCard label="MENSAJES" labelColor="#a99fb6" value={messageCount} color="#4A4458" />
       </div>
+
+      {(topNino.length > 0 || topNina.length > 0) && (
+        <div className="grid grid-cols-2 gap-[14px] mb-6">
+          <NameSuggestionCard label="NOMBRES SUGERIDOS · NIÑO" color="#2C6E8F" items={topNino} />
+          <NameSuggestionCard label="NOMBRES SUGERIDOS · NIÑA" color="#B14B7E" items={topNina} />
+        </div>
+      )}
 
       <div className="bg-white rounded-[20px] px-6 py-[22px] mb-[22px]" style={{ boxShadow: "0 10px 30px -22px rgba(106,79,201,.5)" }}>
         <div className="font-serif font-bold text-[24px] text-[#3a3349] mb-1">Revelar el resultado</div>
@@ -126,11 +143,15 @@ export function AdminView({ initial }: { initial: VotesPayload }) {
         </div>
         <div className="max-h-[360px] overflow-y-auto">
           {voters.map((v) => (
-            <div key={v.id} className="flex items-center gap-[14px] px-4 py-3 border-t border-[#f5ede4]">
+            <div
+              key={v.id}
+              onClick={() => setActiveVoterId(v.id)}
+              className="flex items-center gap-[14px] px-4 py-3 border-t border-[#f5ede4] cursor-pointer hover:bg-[#fbf7f1]"
+            >
               <Avatar name={v.name} vote={v.vote} photoUrl={v.photoUrl} size={38} />
               <div className="flex-1 min-w-0">
                 <div className="font-extrabold text-[#3a3349] text-[15px]">{v.name}</div>
-                <div className="text-[13px] text-[#9a93a6] overflow-hidden text-ellipsis whitespace-nowrap">{v.message}</div>
+                <div className="text-[13px] text-[#9a93a6] overflow-hidden text-ellipsis whitespace-nowrap">{v.messagePreview}</div>
               </div>
               <div
                 className="text-[11px] font-extrabold tracking-[.5px] px-[11px] py-[5px] rounded-full flex-none"
@@ -143,6 +164,92 @@ export function AdminView({ initial }: { initial: VotesPayload }) {
           ))}
         </div>
       </div>
+
+      {activeVoter && (
+        <div
+          className="fixed inset-0 bg-black/40 flex items-center justify-center px-4 z-50"
+          onClick={() => setActiveVoterId(null)}
+        >
+          <div
+            className="bg-white rounded-[20px] px-6 py-6 max-w-[420px] w-full"
+            style={{ boxShadow: "0 20px 60px -20px rgba(0,0,0,.4)" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <Avatar name={activeVoter.name} vote={activeVoter.vote} photoUrl={activeVoter.photoUrl} size={52} glow />
+              <div className="min-w-0">
+                <div className="font-serif font-bold text-[20px] text-[#3a3349]">{activeVoter.name}</div>
+                <div
+                  className="inline-block text-[11px] font-extrabold tracking-[.5px] px-[10px] py-[3px] rounded-full mt-1"
+                  style={{ color: activeVoter.color, background: activeVoter.soft }}
+                >
+                  {activeVoter.voteLabel}
+                </div>
+              </div>
+            </div>
+            <div className="text-[12px] font-extrabold tracking-[1px] text-[#a99fb6] mb-1">MENSAJE</div>
+            <p className="text-[15px] text-[#3a3349] leading-[1.5] mb-4">{activeVoter.message || "Sin mensaje."}</p>
+            {(activeVoter.nameNino || activeVoter.nameNina) && (
+              <>
+                <div className="text-[12px] font-extrabold tracking-[1px] text-[#a99fb6] mb-1">NOMBRES SUGERIDOS</div>
+                <div className="flex gap-4 mb-2">
+                  {activeVoter.nameNino && (
+                    <div>
+                      <span className="text-[11px] font-bold text-[#2C6E8F]">NIÑO: </span>
+                      <span className="text-[14px] text-[#3a3349]">{activeVoter.nameNino}</span>
+                    </div>
+                  )}
+                  {activeVoter.nameNina && (
+                    <div>
+                      <span className="text-[11px] font-bold text-[#B14B7E]">NIÑA: </span>
+                      <span className="text-[14px] text-[#3a3349]">{activeVoter.nameNina}</span>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+            <button
+              onClick={() => setActiveVoterId(null)}
+              className="w-full mt-3 border-none rounded-xl py-[11px] text-[13px] font-extrabold cursor-pointer bg-[#f3e9df] text-[#8a8398]"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function NameSuggestionCard({
+  label,
+  color,
+  items,
+}: {
+  label: string;
+  color: string;
+  items: { name: string; count: number }[];
+}) {
+  return (
+    <div className="bg-white rounded-[18px] px-5 py-[16px]" style={{ boxShadow: "0 10px 30px -22px rgba(106,79,201,.5)" }}>
+      <div className="text-[12px] font-extrabold tracking-[1px] mb-2" style={{ color }}>
+        {label}
+      </div>
+      {items.length === 0 ? (
+        <div className="text-[13px] text-[#c4bcd0]">Sin sugerencias todavía</div>
+      ) : (
+        <div className="flex flex-wrap gap-2">
+          {items.map((it) => (
+            <div
+              key={it.name}
+              className="text-[13px] font-bold px-3 py-1 rounded-full"
+              style={{ color, background: `${color}15` }}
+            >
+              {it.name} <span style={{ opacity: 0.6 }}>×{it.count}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

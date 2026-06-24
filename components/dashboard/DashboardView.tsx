@@ -14,6 +14,7 @@ import { RevealScreen } from "@/components/reveal/RevealScreen";
 import { SocialCarousel } from "@/components/dashboard/SocialCarousel";
 import { AmbientParticles } from "@/components/dashboard/AmbientParticles";
 import { BABY_LABEL, COUNTDOWN_TARGET_ISO, EVENT_DATE_LABEL } from "@/lib/eventConfig";
+import { topNameSuggestions } from "@/lib/nameSuggestions";
 
 const REVEAL_PREP_MS = 5 * 60 * 1000;
 const VOTE_LABEL: Record<VoteChoice, string> = { nino: "Niño", nina: "Niña" };
@@ -44,6 +45,8 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
     ninaRecent,
     recentVoters,
     messages,
+    topNino,
+    topNina,
   } = useMemo(() => {
     const ninoCount = votes.filter((v) => v.vote === "nino").length;
     const ninaCount = votes.filter((v) => v.vote === "nina").length;
@@ -57,6 +60,8 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
       .filter((v) => v.message)
       .slice(-16)
       .reverse();
+    const topNino = topNameSuggestions(votes, "nino");
+    const topNina = topNameSuggestions(votes, "nina");
     return {
       ninoCount,
       ninaCount,
@@ -67,6 +72,8 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
       ninaRecent,
       recentVoters,
       messages,
+      topNino,
+      topNina,
     };
   }, [votes]);
 
@@ -418,6 +425,16 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
         </div>
       </div>
 
+      {(topNino.length > 0 || topNina.length > 0) && (
+        <div
+          className="flex justify-center"
+          style={{ gap: "clamp(20px,3vw,48px)", marginTop: "clamp(10px,1.4vw,18px)", opacity: revealPrep ? 0.45 : 1, transition: "opacity 1.5s ease" }}
+        >
+          <NameSuggestions label="NOMBRES SUGERIDOS · NIÑO" color="#2C6E8F" items={topNino} />
+          <NameSuggestions label="NOMBRES SUGERIDOS · NIÑA" color="#B14B7E" items={topNina} />
+        </div>
+      )}
+
       <div style={{ marginTop: "clamp(12px,1.6vw,22px)", opacity: revealPrep ? 0.45 : 1, transition: "opacity 1.5s ease" }}>
         <SocialCarousel votes={votes} />
       </div>
@@ -439,6 +456,37 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
           </span>
         </div>
       )}
+    </div>
+  );
+}
+
+function NameSuggestions({
+  label,
+  color,
+  items,
+}: {
+  label: string;
+  color: string;
+  items: { name: string; count: number }[];
+}) {
+  if (items.length === 0) return null;
+  return (
+    <div className="bg-white rounded-2xl px-5 py-3" style={{ boxShadow: "0 8px 20px -16px rgba(106,79,201,.5)" }}>
+      <div className="font-extrabold tracking-[1.5px]" style={{ color, opacity: 0.7, fontSize: "clamp(9px,.9vw,11px)" }}>
+        {label}
+      </div>
+      <div className="flex items-center gap-3 mt-1">
+        {items.map((it) => (
+          <div key={it.name} className="flex items-baseline gap-1">
+            <span className="font-serif font-bold text-[#3a3349]" style={{ fontSize: "clamp(14px,1.5vw,19px)" }}>
+              {it.name}
+            </span>
+            <span className="font-bold" style={{ color, opacity: 0.6, fontSize: "clamp(10px,1vw,13px)" }}>
+              ×{it.count}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
