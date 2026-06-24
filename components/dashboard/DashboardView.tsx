@@ -329,7 +329,8 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
         style={{
           gap: "clamp(14px,1.6vw,26px)",
           marginTop: "clamp(14px,1.8vw,26px)",
-          height: "clamp(180px,22vh,220px)",
+          height: "clamp(180px,24vh,240px)",
+          flexShrink: 0,
           opacity: revealPrep ? 0.45 : 1,
           transition: "opacity 1.5s ease",
         }}
@@ -353,7 +354,16 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
             >
               <Avatar name={featured.name} vote={featured.vote} photoUrl={featured.photoUrl} size={64} glow />
               <div className="min-w-0">
-                <div className="font-serif font-bold text-[#3a3349]" style={{ fontSize: "clamp(20px,1.9vw,26px)" }}>
+                <div
+                  className="font-serif font-bold text-[#3a3349]"
+                  style={{
+                    fontSize: "clamp(20px,1.9vw,26px)",
+                    display: "-webkit-box",
+                    WebkitBoxOrient: "vertical",
+                    WebkitLineClamp: 2,
+                    overflow: "hidden",
+                  }}
+                >
                   &ldquo;{featured.message}&rdquo;
                 </div>
                 <div className="font-extrabold mt-2" style={{ fontSize: "clamp(11px,1.1vw,15px)" }}>
@@ -372,7 +382,16 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
                 >
                   <Avatar name={m.name} vote={m.vote} photoUrl={m.photoUrl} size={34} />
                   <div className="min-w-0">
-                    <div className="font-serif font-bold text-[#3a3349]" style={{ fontSize: "clamp(20px,1.5vw,22px)" }}>
+                    <div
+                      className="font-serif font-bold text-[#3a3349]"
+                      style={{
+                        fontSize: "clamp(20px,1.5vw,22px)",
+                        display: "-webkit-box",
+                        WebkitBoxOrient: "vertical",
+                        WebkitLineClamp: 1,
+                        overflow: "hidden",
+                      }}
+                    >
                       &ldquo;{m.message}&rdquo;
                     </div>
                     <div className="font-extrabold text-[#a99fb6] mt-1" style={{ fontSize: "clamp(10px,1vw,13px)" }}>
@@ -393,7 +412,14 @@ export function DashboardView({ initial }: { initial: VotesPayload }) {
         </div>
       </div>
 
-      <div style={{ marginTop: "clamp(12px,1.6vw,22px)", opacity: revealPrep ? 0.45 : 1, transition: "opacity 1.5s ease" }}>
+      <div
+        style={{
+          marginTop: "clamp(20px,2.6vw,34px)",
+          flexShrink: 0,
+          opacity: revealPrep ? 0.45 : 1,
+          transition: "opacity 1.5s ease",
+        }}
+      >
         <SocialCarousel votes={votes} />
       </div>
 
